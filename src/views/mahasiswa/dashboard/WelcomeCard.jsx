@@ -9,19 +9,6 @@ import Chip from '@mui/material/Chip'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
-const dataFake = {
-  mahasiswa: {
-    nama: 'Sitti Badriah',
-    semester: 'Semester 5',
-    sks: '90 SKS',
-    ipk: '3.75'
-  },
-  dosen: {
-    nama: 'MUHYIDDIN A M HAYAT',
-    jabatan: 'Penasehat Akademik',
-    avatar: 'https://simak.unismuh.ac.id/upload/dosen/0931087901_.jpg'
-  }
-}
 
 const icons = [
   {
@@ -72,21 +59,23 @@ const icons = [
   }
 ]
 
-const WelcomeCard = () => {
+const WelcomeCard = ({ data }) => {
   const theme = useTheme()
   const belowMdScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+
   return (
     <div className='flex flex-col gap-4 p-4 md:flex-row md:items-center'>
       <div className='md:w-8/12'>
         <div className='flex flex-col items-baseline gap-1 mb-2 md:flex-row'>
-          <Typography variant={belowMdScreen ? 'h6' : 'h5'} className='mb-0'>
+          <Typography variant={belowMdScreen ? 'h6' : 'h5'} className='mb-3'>
             Selamat Datang,
           </Typography>
-          <Typography variant={belowMdScreen ? 'h5' : 'h4'} className='mb-0'>
-            {dataFake.mahasiswa.nama} 👋🏻
+          <Typography variant={belowMdScreen ? 'h5' : 'h4'} className='mb-2'>
+            {data.mahasiswa.nama} 👋🏻
           </Typography>
         </div>
-        <Typography className='mb-2'>
+        <Typography className='mb-3'>
           Progress Anda luar biasa! Tetap rajin kuliah dan belajar agar lulus tepat waktu!
         </Typography>
         <div className='flex flex-wrap justify-between gap-4'>
@@ -99,10 +88,10 @@ const WelcomeCard = () => {
                 <Typography className='font-medium'>{item.title}</Typography>
                 <Typography variant='h6' color={`${item.color}.main`} className='mt-0 mb-0'>
                   {i === 0
-                    ? dataFake.mahasiswa.semester
+                    ? data.mahasiswa.semester
                     : i === 1
-                      ? dataFake.mahasiswa.sks
-                      : dataFake.mahasiswa.ipk}
+                      ? data.mahasiswa.sks
+                      : data.mahasiswa.ipk}
                 </Typography>
               </div>
             </div>
@@ -114,14 +103,14 @@ const WelcomeCard = () => {
         <div className='flex flex-col items-center gap-2'>
           <CustomAvatar
             alt='user-profile'
-            src={dataFake.dosen.avatar}
+            src={data.dosen.avatar}
             variant='rounded'
             size={belowMdScreen ? 120 : 140}
           />
           <Typography variant={belowMdScreen ? 'h6' : 'h5'} className='mt-0 mb-0'>
-            {dataFake.dosen.nama}
+            {data.dosen.nama}
           </Typography>
-          <Chip label={dataFake.dosen.jabatan} color='success' size='small' variant='tonal' />
+          <Chip label={data.dosen.jabatan} color='success' size='small' variant='tonal' />
         </div>
       </div>
     </div>
