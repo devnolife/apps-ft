@@ -1,0 +1,31 @@
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #__next :is(.sm\:\!p-12) {
+    padding: 0rem !important;
+  }
+  [data-mui-color-scheme='dark'] {
+    --mui-palette-text-primary: rgba(47, 43, 61, 0.9);
+    --mui-palette-action-hover: rgba(47, 43, 61, 0.06);
+    --mui-palette-text-secondary: rgba(47, 43, 61, 0.7);
+    --mui-palette-divider: rgba(47, 43, 61, 0.12);
+  }
+
+  /* Only show the .preview-card element when printing */
+  .previewCard * {
+    visibility: visible;
+  }
+  .previewCard {
+    inline-size: 100%;
+    block-size: 100%;
+    position: fixed;
+    inset: 0;
+    box-sizing: border-box;
+  }
+  @media (max-width: 600px) {
+    .previewCard {
+      position: relative !important;
+    }
+  }
+}
