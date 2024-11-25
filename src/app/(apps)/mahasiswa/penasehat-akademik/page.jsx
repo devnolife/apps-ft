@@ -56,6 +56,13 @@ const mahasiswa = {
   tahun_akademik: '2023/2024',
 }
 
+const signature = {
+  tanggal: '25 November 2024',
+  namaProdi: 'Informatika',
+  namaKetuaProdi: 'Muhyiddin AM.Hayat, S.Kom., MT',
+  nbm: '1504 577',
+};
+
 const PenasehatAkademik = () => {
   const [selectedSemester, setSelectedSemester] = useState('Semester 1')
   const [filteredData, setFilteredData] = useState(dataPa['Semester 1'])
@@ -72,6 +79,7 @@ const PenasehatAkademik = () => {
 
   return (
     <Preview
+      signature={signature}
       mahasiswa={mahasiswa}
       data={filteredData}
       semester={selectedSemester}

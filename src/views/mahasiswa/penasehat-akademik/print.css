@@ -1,31 +1,87 @@
 @media print {
+  /* Hide all elements by default */
   body * {
     visibility: hidden;
   }
-  #__next :is(.sm\:\!p-12) {
-    padding: 0rem !important;
-  }
-  [data-mui-color-scheme='dark'] {
-    --mui-palette-text-primary: rgba(47, 43, 61, 0.9);
-    --mui-palette-action-hover: rgba(47, 43, 61, 0.06);
-    --mui-palette-text-secondary: rgba(47, 43, 61, 0.7);
-    --mui-palette-divider: rgba(47, 43, 61, 0.12);
-  }
 
-  /* Only show the .preview-card element when printing */
+  /* Show specific elements */
+  .previewCard,
   .previewCard * {
     visibility: visible;
   }
-  .previewCard {
-    inline-size: 100%;
-    block-size: 100%;
-    position: fixed;
-    inset: 0;
-    box-sizing: border-box;
+
+  /* Ensure signature and footer sections are visible */
+  .signature-section,
+  .footer-section {
+    display: block !important;
+    visibility: visible !important;
   }
-  @media (max-width: 600px) {
-    .previewCard {
-      position: relative !important;
-    }
+
+  /* Ensure header and footer do not have unwanted background */
+  .previewCard header,
+  .previewCard footer {
+    background: transparent !important;
+    box-shadow: none !important;
+  }
+
+  /* Set the main previewCard styling */
+  .previewCard {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: white !important; /* Ensure background for printing */
+  }
+
+  /* Ensure no padding or margin issues */
+  #__next {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Ensure tables and headers print correctly */
+  table,
+  th,
+  td {
+    border: 1px solid black !important;
+    visibility: visible !important;
+    background-color: white !important; /* Avoid any dark themes during print */
+  }
+
+  /* Show header, footer, and main explicitly */
+  header,
+  footer,
+  main {
+    display: block !important;
+    visibility: visible !important;
+  }
+
+  /* Adjust page color scheme */
+  [data-mui-color-scheme='dark'] {
+    --mui-palette-text-primary: rgba(0, 0, 0, 0.9);
+    --mui-palette-background-default: #ffffff;
+    --mui-palette-text-secondary: rgba(0, 0, 0, 0.7);
+    --mui-palette-divider: rgba(0, 0, 0, 0.12);
+  }
+
+  /* Prevent content cut-off during print */
+  html,
+  body {
+    width: 100%;
+    height: auto;
+    overflow: visible !important;
+  }
+
+  /* Ensure proper page breaks for printing */
+  .page-break {
+    break-after: always;
+    break-before: auto;
+  }
+
+  /* Fix unwanted background or border styles */
+  .styled-card {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 }
