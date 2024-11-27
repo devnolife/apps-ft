@@ -9,8 +9,7 @@ import CustomTextField from '@core/components/mui/TextField'
 
 import { useImageVariant } from '@core/hooks/useImageVariant'
 
-const SearchHeader = ({ data }) => {
-  const { searchValue, setSearchValue } = data
+const SearchHeader = ({ searchValue, setSearchValue }) => {
   const lightIllustration = '/images/apps/academy/hand-with-bulb-light.png'
   const darkIllustration = '/images/apps/academy/hand-with-bulb-dark.png'
   const theme = useTheme()

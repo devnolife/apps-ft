@@ -24,7 +24,7 @@ const data = [
     pengurusLab: 'Dai Daifullah',
     gambarLab: 'https://c4.wallpaperflare.com/wallpaper/974/747/684/java-developer-hd-wallpaper-preview.jpg',
     desc: 'Lab ini fokus pada dasar-dasar pemrograman menggunakan bahasa Java.',
-    pertemuan: 1,
+    pertemuan: 10,
     total_pertemuan: 10,
     time: 180,
     selesai: true

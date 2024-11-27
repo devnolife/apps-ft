@@ -19,6 +19,7 @@ import Switch from '@mui/material/Switch'
 import Typography from '@mui/material/Typography'
 import Pagination from '@mui/material/Pagination'
 
+
 import DirectionalIcon from '@components/DirectionalIcon'
 
 const chipColor = {
@@ -142,14 +143,16 @@ const DashboardLab = ({ courseData, searchValue }) => {
                     />
                     {item.pertemuan === item.total_pertemuan ? (
                       <Button
-                        variant='tonal'
-                        color='error'
-                        startIcon={<i className='tabler-rotate-clockwise-2' />}
+                        variant='contained'
+                        color='success'
+                        endIcon={
+                          <DirectionalIcon ltrIconClass='tabler-checklist' rtlIconClass='tabler-chevron-left' />
+                        }
                         component={Link}
-                        href={'/apps/academy/lab-details'}
+                        href={'/mahasiswa/laboratorium/sertifikat'}
                         className='w-full'
                       >
-                        Ulangi
+                        Unduh Sertifikat
                       </Button>
                     ) : (
                       <Button

@@ -38,7 +38,7 @@ const dataProgress = [
     color: 'warning',
     progress: 'Praktikum/Laboratorium',
     status: 'aktif',
-    url: '/mahasiswa/lab'
+    url: '/mahasiswa/laboratorium'
   },
   {
     id: 3,
