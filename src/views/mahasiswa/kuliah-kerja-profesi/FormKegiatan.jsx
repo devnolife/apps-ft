@@ -10,7 +10,7 @@ import AppReactDatepicker from '@/libs/styles/AppReactDatepicker';
 import CustomTextField from '@core/components/mui/TextField';
 import KegiatanLaporan from './KegiatanLaporan';
 
-const FormKegiatan = () => {
+const FormKegiatan = ({ activitiesData }) => {
   const initialActivities = [{ date: '', activity: '', upload: '' }];
   const [activities, setActivities] = useState(initialActivities);
   const [currentPage, setCurrentPage] = useState(1);
@@ -289,7 +289,9 @@ const FormKegiatan = () => {
         fullWidth
         maxWidth='md'
       >
-        <KegiatanLaporan onClose={handleCloseDialog} />
+        <KegiatanLaporan
+          data={activitiesData}
+          onClose={handleCloseDialog} />
       </Dialog>
     </>
   );

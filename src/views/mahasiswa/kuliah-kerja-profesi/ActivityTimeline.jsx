@@ -15,10 +15,8 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { styled } from '@mui/material/styles'
 import MuiTimeline from '@mui/lab/Timeline'
 
-// Component Imports
 import CustomAvatar from '@core/components/mui/Avatar'
 
-// Styled Components
 const Timeline = styled(MuiTimeline)({
   '& .MuiTimelineItem-root': {
     '&:before': {
@@ -48,9 +46,8 @@ const ActivityTimeline = ({ data, dataDosenPembimbing }) => {
               </div>
               <Typography>Seluruh anggota kelompok saat ini sedang menjalani kegiatan KKP.</Typography>
             </TimelineContent>
-
           </TimelineItem>
-          {/* Penambahan Pembimbing */}
+
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot color='success' />
@@ -62,19 +59,18 @@ const ActivityTimeline = ({ data, dataDosenPembimbing }) => {
                 <Typography variant='caption'>5 Hari Lalu</Typography>
               </div>
               <Typography className='mbe-1'>Dosen pembimbing ditambahkan:</Typography>
-              <div className='flex items-center gap-2.5'>
-                <CustomAvatar src={dataDosenPembimbing.avatar} size={32} />
+              <div className='flex items-center justify-between'>
                 <div>
                   <Typography className='font-medium' variant='body2'>
                     {dataDosenPembimbing.name}
                   </Typography>
                   <Typography variant='body2'>{dataDosenPembimbing.profession}</Typography>
                 </div>
+                <CustomAvatar src={dataDosenPembimbing.avatar} size={32} />
               </div>
             </TimelineContent>
           </TimelineItem>
 
-          {/* Pembuatan File Surat */}
           <TimelineItem>
             <TimelineSeparator>
               <TimelineDot color='info' />
@@ -86,16 +82,12 @@ const ActivityTimeline = ({ data, dataDosenPembimbing }) => {
                 <Typography variant='caption'>3 Hari Lalu</Typography>
               </div>
               <Typography className='mbe-1'>File surat KKP telah selesai dibuat.</Typography>
-              <div className='flex'>
-                <div className='flex gap-2.5 items-center pli-2.5 bg-actionHover plb-[0.3125rem] rounded'>
-                  <img alt='file-surat.pdf' src='/images/icons/pdf-document.png' className='bs-5' />
-                  <Typography className='font-medium'>file-surat.pdf</Typography>
-                </div>
+              <div className='flex items-center justify-between'>
+                <Typography className='font-medium'>file-surat.pdf</Typography>
+                <img alt='file-surat.pdf' src='/images/icons/pdf-document.png' className='bs-5' />
               </div>
             </TimelineContent>
           </TimelineItem>
-
-          {/* Status KKP Berurutan */}
 
           <TimelineItem>
             <TimelineSeparator>
