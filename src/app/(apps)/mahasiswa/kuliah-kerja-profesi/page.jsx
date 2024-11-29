@@ -1,15 +1,14 @@
 
 
-import { Nanum_Pen_Script } from "next/font/google";
 
-import { Grid } from "@mui/material";
+import { Card, CardContent, Divider, Grid, Step, StepLabel, Stepper, Typography } from "@mui/material";
 
 import ChartDashboard from "@views/mahasiswa/kuliah-kerja-profesi/ChartDashboard";
 import FormKegiatan from "@/views/mahasiswa/kuliah-kerja-profesi/FormKegiatan";
 import ActivityTimeline from "@/views/mahasiswa/kuliah-kerja-profesi/ActivityTimeline";
+import StepperWrapper from "@/@core/styles/stepper";
 
-
-const statusKpp = true
+const statusKpp = false;
 
 const locationData = {
 
@@ -100,25 +99,98 @@ const aktivitasKelompok = [
 ];
 
 
+const dataLokasiKkp = [
+  {
+    name: 'Komisi Pemilihan Umum - Kota Makassar',
+    address: 'Jl. Perintis Kemerdekaan No.3, Makassar',
+    logo: '/logo/kpu.png',
+    keterangan: 'Kantor KPU Kota Makassar adalah kantor yang berada di Kota Makassar yang bertugas untuk mengatur dan melaksanakan pemilihan umum di Kota Makassar.',
+  },
+  {
+    name: 'Kalla Group',
+    address: 'Jl. AP Pettarani No.1, Makassar',
+    logo: '/logo/kalla.png',
+    keterangan: 'Kalla Group adalah sebuah perusahaan yang bergerak di bidang konstruksi, properti, hotel, dan lain-lain.',
+  },
+  {
+    name: 'PDAM Kota Makassar',
+    address: 'Jl. Dr. Sam Ratulangi No.52, Makassar',
+    logo: '/logo/pdam.png',
+    keterangan: 'PDAM Kota Makassar adalah perusahaan daerah yang bergerak di bidang penyediaan air bersih di Kota Makassar.',
+  },
+  {
+    name: 'Balai Bahasa Sulawesi Selatan',
+    address: 'Jl. Sultan Alauddin No.259, Makassar',
+    logo: '/logo/balai.png',
+    keterangan: 'Balai Bahasa Sulawesi Selatan adalah balai bahasa yang berada di Sulawesi Selatan.',
+  },
+  {
+    name: 'TVRI Sulawesi Selatan',
+    address: 'Jl. Pajonga Daeng Ngalle No.28, Makassar',
+    logo: '/logo/tvri.png',
+    keterangan: 'TVRI Sulawesi Selatan adalah stasiun televisi yang berada di Sulawesi Selatan yang merupakan bagian dari TVRI.',
+  },
+  {
+    name: 'Warkop Kopi Kenangan',
+    address: 'Jl. Boulevard No.1, Makassar',
+    logo: '/logo/kopkep.png',
+    keterangan: 'Warkop Kopi Kenangan adalah warkop yang berada di Makassar yang menyediakan berbagai macam minuman kopi.',
+  },
+];
+
 
 const Page = async () => {
+  const [activeStep, setActiveStep] = useState(0);
+
+  const handleNext = () => {
+    setActiveStep(activeStep + 1)
+  }
+
+
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sx={{
-        marginBottom: 1
-      }}>
-        <ChartDashboard dataDosenPembimbing={null} locationData={locationData} daysElapsed={daysElapsed}
-        />
+    statusKpp ? (
+      <Grid container spacing={2}>
+        <Grid item xs={12} sx={{
+          marginBottom: 1
+        }}>
+          <ChartDashboard dataDosenPembimbing={null} locationData={locationData} daysElapsed={daysElapsed}
+          />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <FormKegiatan activitiesData={aktivitasKelompok} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <ActivityTimeline
+            data={mahasiswa}
+            dataDosenPembimbing={dataDosenPembimbing} />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={8}>
-        <FormKegiatan activitiesData={aktivitasKelompok} />
-      </Grid>
-      <Grid item xs={12} md={4}>
-        <ActivityTimeline
-          data={mahasiswa}
-          dataDosenPembimbing={dataDosenPembimbing} />
-      </Grid>
-    </Grid>
+    ) : (
+      <Card>
+        <CardContent>
+          <StepperWrapper>
+            <Stepper
+              activeStep={activeStep}
+            >
+              {steps.map((step, index) => {
+                return (
+                  <Step key={index} onClick={() => setActiveStep(index)}>
+                    <div style={{ pointerEvents: 'none' }}>
+                      <StepLabel icon={<></>} className='text-center'>
+                        {step.icon}
+                        <Typography className='step-title'>{step.title}</Typography>
+                      </StepLabel>
+                    </div>
+                  </Step>
+                )
+              })}
+            </Stepper>
+          </StepperWrapper>
+        </CardContent>
+        <Divider />
+        <CardContent>{getStepContent(activeStep, handleNext)}</CardContent>
+      </Card>
+    )
   )
 }
 
