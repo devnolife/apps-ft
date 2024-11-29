@@ -2,11 +2,13 @@
 
 import React, { useState } from 'react';
 
-import { Container, TextField, Typography, Grid, Button, Box, Card, CardContent, Pagination, Avatar } from '@mui/material';
+import { Button, Dialog, Container, TextField, Typography, Grid, Box, Card, CardContent, Pagination, Avatar } from '@mui/material';
+
 import { useDropzone } from 'react-dropzone';
 
 import AppReactDatepicker from '@/libs/styles/AppReactDatepicker';
 import CustomTextField from '@core/components/mui/TextField';
+import KegiatanLaporan from './KegiatanLaporan';
 
 const FormKegiatan = () => {
   const initialActivities = [{ date: '', activity: '', upload: '' }];
@@ -14,6 +16,7 @@ const FormKegiatan = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 1;
   const [errorMessage, setErrorMessage] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
 
   const handleAddActivity = () => {
     const currentActivity = activities[currentPage - 1];
@@ -66,6 +69,14 @@ const FormKegiatan = () => {
     setActivities(initialActivities);
     setCurrentPage(1);
     setErrorMessage('');
+  };
+
+  const handleOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   const paginatedActivities = activities.slice(
@@ -128,141 +139,159 @@ const FormKegiatan = () => {
   };
 
   return (
-    <Grid >
-      {paginatedActivities.map((activity, index) => (
-        <Card key={index} sx={{ mb: 3, boxShadow: 3, borderRadius: 2 }}>
-          <CardContent>
-            <Typography variant='h5' textAlign='center' gutterBottom sx={{
-              marginBottom: '20px'
-            }}>
-              Kegiatan Harian Kuliah Kerja Profesi
-            </Typography>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
-                <AppReactDatepicker
-                  selected={activity.date}
-                  id={`date-${index}`}
-                  onChange={date =>
-                    handleChange((currentPage - 1) * itemsPerPage + index, 'date', date)
-                  }
-                  placeholderText='Pilih Tanggal'
-                  customInput={
-                    <CustomTextField label='Tanggal Kegiatan' fullWidth />
-                  }
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} sx={{
-                marginTop: '18px'
-              }}>
-                <TextField
-                  size='small'
-                  label='Lokasi Kegiatan'
-                  value={activity.location || ''}
-                  onChange={e =>
-                    handleChange(
-                      (currentPage - 1) * itemsPerPage + index,
-                      'location',
-                      e.target.value
-                    )
-                  }
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id={`activity-${index}`}
-                  label='Deskripsi Kegiatan'
-                  multiline
-                  rows={4}
-                  value={activity.activity}
-                  onChange={e =>
-                    handleChange(
-                      (currentPage - 1) * itemsPerPage + index,
-                      'activity',
-                      e.target.value
-                    )
-                  }
-                  placeholder='Jelaskan kegiatan atau pekerjaan yang dilakukan pada hari tersebut'
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant='subtitle2' gutterBottom>
-                  Upload Foto Kegiatan *
+    <>
+      <Grid >
+        {paginatedActivities.map((activity, index) => (
+          <Card key={index} sx={{ mb: 3, boxShadow: 3, borderRadius: 2 }}>
+            <CardContent>
+              <Grid container justifyContent='space-between' alignItems='center' sx={{ marginBottom: 2 }}>
+                <Typography variant='h5'>
+                  Kegiatan Harian Kuliah Kerja Profesi
                 </Typography>
-                <FileUploaderSingle index={(currentPage - 1) * itemsPerPage + index} />
+                <Button
+                  variant='contained'
+                  color='success'
+                  sx={{ textTransform: 'none' }}
+                  onClick={handleOpenDialog}
+                >
+                  Lihat Kegiatan
+                </Button>
               </Grid>
-            </Grid>
-            {errorMessage && (
-              <Typography
-                variant='body2'
-                color='error'
-                sx={{ mt: 2 }}
-              >
-                {errorMessage}
+              <Grid container spacing={3}>
+                <Grid item xs={12} sm={6} sx={{ marginBottom: 2 }}>
+                  <AppReactDatepicker
+                    selected={activity.date}
+                    id={`date-${index}`}
+                    onChange={date =>
+                      handleChange((currentPage - 1) * itemsPerPage + index, 'date', date)
+                    }
+                    placeholderText='Pilih Tanggal'
+                    customInput={
+                      <CustomTextField label='Tanggal Kegiatan' fullWidth />
+                    }
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{
+                  marginTop: '18px'
+                }}>
+                  <TextField
+                    size='small'
+                    label='Lokasi Kegiatan'
+                    value={activity.location || ''}
+                    onChange={e =>
+                      handleChange(
+                        (currentPage - 1) * itemsPerPage + index,
+                        'location',
+                        e.target.value
+                      )
+                    }
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    required
+                    fullWidth
+                    id={`activity-${index}`}
+                    label='Deskripsi Kegiatan'
+                    multiline
+                    rows={4}
+                    value={activity.activity}
+                    onChange={e =>
+                      handleChange(
+                        (currentPage - 1) * itemsPerPage + index,
+                        'activity',
+                        e.target.value
+                      )
+                    }
+                    placeholder='Jelaskan kegiatan atau pekerjaan yang dilakukan pada hari tersebut'
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='subtitle2' gutterBottom>
+                    Upload Foto Kegiatan *
+                  </Typography>
+                  <FileUploaderSingle index={(currentPage - 1) * itemsPerPage + index} />
+                </Grid>
+              </Grid>
+              {errorMessage && (
+                <Typography
+                  variant='body2'
+                  color='error'
+                  sx={{ mt: 2 }}
+                >
+                  {errorMessage}
+                </Typography>
+              )}
+            </CardContent>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                px: 2,
+                pb: 2,
+              }}
+            >
+              <Typography variant='body2' color='textSecondary' sx={{
+                marginLeft: '20px'
+              }}>
+                {`Kegiatan ${index + 1} dari ${activities.length}`}
               </Typography>
-            )}
-          </CardContent>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              px: 2,
-              pb: 2,
-            }}
-          >
-            <Typography variant='body2' color='textSecondary' sx={{
-              marginLeft: '20px'
-            }}>
-              {`Kegiatan ${index + 1} dari ${activities.length}`}
-            </Typography>
-            <Box sx={{
-              marginBottom: '20px',
-              marginRight: '20px'
-            }}>
-              <Button
-                variant='outlined'
-                color='error'
-                onClick={handleReset}
-                sx={{
-                  marginRight: '15px'
-                }}
-              >
-                Batalkan
-              </Button>
-              <Button
-                variant='contained'
-                color='primary'
-                onClick={handleSubmit}
-              >
-                Simpan Kegiatan
-              </Button>
+              <Box sx={{
+                marginBottom: '20px',
+                marginRight: '20px'
+              }}>
+                <Button
+                  variant='outlined'
+                  color='error'
+                  onClick={handleReset}
+                  sx={{
+                    marginRight: '15px'
+                  }}
+                >
+                  Batalkan
+                </Button>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  onClick={handleSubmit}
+                >
+                  Simpan Kegiatan
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        </Card>
-      ))}
-      <Grid
-        container
-        justifyContent='space-between'
-        alignItems='center'
-        sx={{ mt: 3 }}
-      >
-        <Button
-          variant='outlined'
-          color='primary'
-          onClick={handleAddActivity}
+          </Card>
+        ))}
+        <Grid
+          container
+          justifyContent='space-between'
+          alignItems='center'
+          sx={{ mt: 3 }}
         >
-          Tambah Kegiatan
-        </Button>
-        <Pagination
-          count={Math.ceil(activities.length / itemsPerPage)}
-          page={currentPage}
-          onChange={handlePageChange}
-          color='primary'
-        />
+          <Button
+            variant='outlined'
+            color='primary'
+            onClick={handleAddActivity}
+          >
+            Tambah Kegiatan
+          </Button>
+          <Pagination
+            count={Math.ceil(activities.length / itemsPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            color='primary'
+          />
+        </Grid>
       </Grid>
-    </Grid>
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        fullWidth
+        maxWidth='md'
+      >
+        <KegiatanLaporan onClose={handleCloseDialog} />
+      </Dialog>
+    </>
   );
 };
 
