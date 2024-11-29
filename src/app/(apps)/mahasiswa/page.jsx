@@ -48,7 +48,7 @@ const dataProgress = [
     color: 'info',
     progress: 'Kuliah Kerja Profesi',
     status: 'aktif',
-    url: '/mahasiswa/kkp'
+    url: '/mahasiswa/kuliah-kerja-profesi'
   },
   {
     id: 4,

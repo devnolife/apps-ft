@@ -4,6 +4,8 @@
 import dynamic from 'next/dynamic'
 
 // MUI Imports
+import { useRouter } from 'next/navigation'
+
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import CardHeader from '@mui/material/CardHeader'
@@ -14,6 +16,8 @@ import Chip from '@mui/material/Chip'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { lighten, darken, useTheme } from '@mui/material/styles'
 import classnames from 'classnames'
+
+import { Button } from '@mui/material'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -101,6 +105,7 @@ const data = [
 
 const Sertifikat = () => {
   const theme = useTheme()
+  const router = useRouter()
   const belowMdScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const donutOptions = {
@@ -257,6 +262,14 @@ const Sertifikat = () => {
 
   return (
     <>
+      <div>
+        <div className='flex justify-between mb-4'>
+          <Button
+            onClick={() => router.back()}
+            variant='contained' color='primary'>Kembali</Button>
+          <Button variant='contained' color='secondary'>Print Sertifikat</Button>
+        </div>
+      </div>
       <div className='flex gap-6 max-md:flex-col md:items-center plb-6'>
         <div className='md:is-8/12'>
           <div className='flex items-baseline gap-1 mbe-1'>

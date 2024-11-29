@@ -84,9 +84,9 @@ const ApexChartWrapper = styled(Box)(({ theme }) => ({
       textAnchor: theme.direction === 'rtl' ? 'start' : undefined
     },
     '& .apexcharts-text, & .apexcharts-tooltip-text, & .apexcharts-datalabel-label, & .apexcharts-datalabel, & .apexcharts-xaxistooltip-text, & .apexcharts-yaxistooltip-text, & .apexcharts-legend-text':
-      {
-        fontFamily: `${theme.typography.fontFamily} !important`
-      },
+    {
+      fontFamily: `${theme.typography.fontFamily} !important`
+    },
     '& .apexcharts-pie-label': {
       filter: 'none'
     },

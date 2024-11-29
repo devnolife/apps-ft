@@ -152,7 +152,7 @@ const DashboardLab = ({ courseData, searchValue }) => {
                         href={'/mahasiswa/laboratorium/sertifikat'}
                         className='w-full'
                       >
-                        Unduh Sertifikat
+                        Sertifikat
                       </Button>
                     ) : (
                       <Button
