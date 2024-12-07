@@ -21,6 +21,9 @@ import { Button } from '@mui/material'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
+import { useRef } from 'react'
+import { useReactToPrint } from 'react-to-print'
+
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
 const series = [{
@@ -107,6 +110,29 @@ const Sertifikat = () => {
   const theme = useTheme()
   const router = useRouter()
   const belowMdScreen = useMediaQuery(theme.breakpoints.down('md'))
+
+  const contentRef = useRef(null)
+  const reactToPrintFn = useReactToPrint({
+    content: () => contentRef.current,
+    documentTitle: 'sertifikat',
+    pageStyle: `
+      @page {
+        size: A4;
+        margin: 20mm;
+      }
+      @media print {
+        body {
+          -webkit-print-color-adjust: exact;
+        }
+      }
+    `,
+    onBeforeGetContent: () => {
+      if (!contentRef.current) {
+        alert("There is nothing to print");
+        return false;
+      }
+    }
+  })
 
   const donutOptions = {
     chart: {
@@ -262,39 +288,39 @@ const Sertifikat = () => {
 
   return (
     <>
-      <div>
+      <div ref={contentRef}>
         <div className='flex justify-between mb-4'>
           <Button
             onClick={() => router.back()}
             variant='contained' color='primary'>Kembali</Button>
-          <Button variant='contained' color='secondary'>Print Sertifikat</Button>
+          <Button onClick={reactToPrintFn} variant='contained' color='secondary'>Print Sertifikat</Button>
         </div>
       </div>
-      <div className='flex gap-6 max-md:flex-col md:items-center plb-6'>
-        <div className='md:is-8/12'>
-          <div className='flex items-baseline gap-1 mbe-1'>
+      <div className='flex flex-col gap-6 md:flex-row md:items-center plb-6'>
+        <div className='md:w-8/12'>
+          <div className='flex flex-col items-baseline gap-1 mb-1 md:flex-row'>
             <Typography variant='h5'>Sertifikat Labolatorium,</Typography>
             <Typography variant='h4'>Dhia Daifullah 👋🏻</Typography>
           </div>
-          <div className='mbe-2'>
-            <div className='mbe-1'>
+          <div className='mb-2'>
+            <div className='mb-1'>
               <Typography>Atas keberhasilan menyelesaikan Labolatorium</Typography>
-              <div className='flex items-center justify-between'>
+              <div className='flex flex-col items-center justify-between md:flex-row'>
                 <Typography variant='h5'>Backend Developer Nest JS</Typography>
-                <div className='flex'>
-                  <Chip label='Typescript' color='info' variant='tonal' style={{ margin: '4px' }} />
-                  <Chip label='NodeJS' color='warning' variant='tonal' style={{ margin: '4px' }} />
-                  <Chip label='Docker' color='success' variant='tonal' style={{ margin: '4px' }} />
-                  <Chip label='PostgreSQL' color='secondary' variant='tonal' style={{ margin: '4px' }} />
+                <div className='flex flex-wrap'>
+                  <Chip label='Typescript' color='info' variant='tonal' className='m-1' />
+                  <Chip label='NodeJS' color='warning' variant='tonal' className='m-1' />
+                  <Chip label='Docker' color='success' variant='tonal' className='m-1' />
+                  <Chip label='PostgreSQL' color='secondary' variant='tonal' className='m-1' />
                 </div>
               </div>
             </div>
           </div>
-          <div className='flex flex-wrap justify-between gap-6 max-md:flex-col'>
+          <div className='flex flex-wrap justify-between gap-6'>
             {data.map((item, i) => (
               <div key={i} className='flex gap-4'>
                 <CustomAvatar variant='rounded' skin='light' size={54} color={item.color}>
-                  {item.icon}
+                  {item.icon ? item.icon : <Typography>belum ditambahkan gambar</Typography>}
                 </CustomAvatar>
                 <div>
                   <Typography className='font-medium'>{item.title}</Typography>
@@ -309,7 +335,7 @@ const Sertifikat = () => {
 
         <Divider orientation={belowMdScreen ? 'horizontal' : 'vertical'} flexItem />
 
-        <div className='flex justify-between md:is-4/12'>
+        <div className='flex flex-col items-center justify-between md:flex-row md:w-4/12'>
           <div className='flex flex-col justify-between gap-6'>
             <div>
               <Typography variant='h4' className='mt-1'>
@@ -317,7 +343,7 @@ const Sertifikat = () => {
               </Typography>
             </div>
             <div>
-              <Typography variant='h4' className='mbe-2'>
+              <Typography variant='h4' className='mb-2'>
                 231<span className='text-textSecondary'>h</span> 14<span className='text-textSecondary'>m</span>
               </Typography>
             </div>
@@ -330,11 +356,11 @@ const Sertifikat = () => {
         <CardHeader title='Penguasaan Kompetensi Labolatorium' />
         <CardContent>
           <Grid container>
-            <Grid item xs={12} sm={6} className='max-sm:mbe-6'>
+            <Grid item xs={12} sm={6} className='mb-6'>
               <AppReactApexCharts type='bar' height={296} width='100%' series={series} options={barOptions} />
             </Grid>
             <Grid item xs={12} sm={6} alignSelf='center'>
-              <div className='flex items-start justify-around'>
+              <div className='flex flex-col items-start justify-around md:flex-row'>
                 <div className='flex flex-col gap-y-12'>
                   {leftData.map((item, i) => (
                     <div key={i} className='flex gap-2'>
@@ -346,7 +372,6 @@ const Sertifikat = () => {
                     </div>
                   ))}
                 </div>
-                {/* Right Data Column */}
                 <div className='flex flex-col gap-y-12'>
                   {rightData.map((item, i) => (
                     <div key={i} className='flex gap-2'>

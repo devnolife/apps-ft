@@ -9,13 +9,7 @@ import Grid from '@mui/material/Grid'
 import SearchHeader from "@/views/mahasiswa/laboratorium/HeaderSearch"
 import DashboardLab from "@/views/mahasiswa/laboratorium/Dashboard"
 
-// const chipColor = {
-//   'Semester 1': { color: 'primary' },
-//   'Semester 2': { color: 'success' },
-//   'Semester 3': { color: 'error' },
-//   'Semester 4': { color: 'warning' },
-//   'Semester 5': { color: 'info' }
-// }
+
 const data = [
   {
     namaLab: 'Pemrograman Dasar',

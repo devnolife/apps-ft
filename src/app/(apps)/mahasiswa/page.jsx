@@ -26,7 +26,7 @@ const dataProgress = [
     totalTasks: 7,
     logo: 'tabler-clipboard',
     color: 'success',
-    progress: 'Penasehat Akademik',
+    progress: 'Perkuliahan Akademik',
     status: 'aktif',
     url: '/mahasiswa/penasehat-akademik'
   },

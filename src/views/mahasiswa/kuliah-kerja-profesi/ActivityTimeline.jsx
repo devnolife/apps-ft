@@ -25,92 +25,70 @@ const Timeline = styled(MuiTimeline)({
   }
 })
 
-const ActivityTimeline = ({ data, dataDosenPembimbing }) => {
+const ActivityTimeline = ({ data }) => {
+  const renderTimelineItems = (activities) => {
+    return activities.map((activity, index) => {
+      const isSameDay = index > 0 && activities[index - 1].date === activity.date;
+      return (
+        <TimelineItem key={index}>
+          <TimelineSeparator>
+            <TimelineDot color={activity.color} />
+            {!isSameDay && <TimelineConnector />}
+          </TimelineSeparator>
+          <TimelineContent>
+            <div className='flex items-center justify-between flex-wrap gap-x-4 pbe-[7px]'>
+              <Typography className='font-medium text-textPrimary'>{activity.title}</Typography>
+              <Typography variant='caption'>{activity.date}</Typography>
+            </div>
+            <Typography className='mbe-1'>{activity.description}</Typography>
+            {activity.details && (
+              <div className='flex items-center justify-between'>
+                <Typography className='font-medium'>{activity.details}</Typography>
+                {activity.image && <img alt={activity.details} src={activity.image} className='bs-5' />}
+              </div>
+            )}
+            {activity.avatars && (
+              <AvatarGroup>
+                {activity.avatars.map((avatar, idx) => (
+                  <Avatar key={idx} alt={avatar.name} src={avatar.src} />
+                ))}
+              </AvatarGroup>
+            )}
+          </TimelineContent>
+        </TimelineItem>
+      );
+    });
+  };
+
+  const additionalActivities = [
+    {
+      title: 'Pembentukan Kelompok',
+      date: '2023-11-01',
+      description: 'Kelompok KKP telah dibentuk oleh mahasiswa.',
+      color: 'primary',
+    },
+    {
+      title: 'Persetujuan Lokasi KKP',
+      date: '2023-11-05',
+      description: 'Tempat lokasi KKP telah disetujui oleh Ketua Prodi.',
+      color: 'success',
+    },
+  ];
+
   return (
     <Card>
       <CardHeader
-        title='Aktivitas Timeline'
+        title='Aktivitas Terbaru'
         avatar={<i className='tabler-chart-bar text-textSecondary' />}
         titleTypographyProps={{ variant: 'h5' }}
       />
       <CardContent>
         <Timeline>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='secondary' />
-            </TimelineSeparator>
-            <TimelineContent>
-              <div className='flex items-center justify-between flex-wrap gap-x-4 pbe-[7px]'>
-                <Typography className='font-medium text-textPrimary'> KKP Sedang Berlangsung</Typography>
-                <Typography variant='caption'>Hari Ini</Typography>
-              </div>
-              <Typography>Seluruh anggota kelompok saat ini sedang menjalani kegiatan KKP.</Typography>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='success' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <div className='flex items-center justify-between flex-wrap gap-x-4 pbe-[7px]'>
-                <Typography className='font-medium text-textPrimary'>Penambahan Pembimbing</Typography>
-                <Typography variant='caption'>5 Hari Lalu</Typography>
-              </div>
-              <Typography className='mbe-1'>Dosen pembimbing ditambahkan:</Typography>
-              <div className='flex items-center justify-between'>
-                <div>
-                  <Typography className='font-medium' variant='body2'>
-                    {dataDosenPembimbing.name}
-                  </Typography>
-                  <Typography variant='body2'>{dataDosenPembimbing.profession}</Typography>
-                </div>
-                <CustomAvatar src={dataDosenPembimbing.avatar} size={32} />
-              </div>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='info' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <div className='flex items-center justify-between flex-wrap gap-x-4 pbe-[7px]'>
-                <Typography className='font-medium text-textPrimary'>Pembuatan File Surat</Typography>
-                <Typography variant='caption'>3 Hari Lalu</Typography>
-              </div>
-              <Typography className='mbe-1'>File surat KKP telah selesai dibuat.</Typography>
-              <div className='flex items-center justify-between'>
-                <Typography className='font-medium'>file-surat.pdf</Typography>
-                <img alt='file-surat.pdf' src='/images/icons/pdf-document.png' className='bs-5' />
-              </div>
-            </TimelineContent>
-          </TimelineItem>
-
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='primary' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <div className='flex items-center justify-between flex-wrap gap-x-4 pbe-[7px]'>
-                <Typography className='font-medium text-textPrimary'>Pembentukan Kelompok</Typography>
-                <Typography variant='caption'>1 Minggu Lalu</Typography>
-              </div>
-              <Typography className='mbe-1'>Kelompok KKP terbentuk dengan anggota sebagai berikut:</Typography>
-              <AvatarGroup>
-                {data.map((mhs, index) => (
-                  <Avatar key={index} alt={mhs.nama} src={mhs.avatar} />
-                ))}
-              </AvatarGroup>
-            </TimelineContent>
-          </TimelineItem>
+          {renderTimelineItems([...data, ...additionalActivities])}
         </Timeline>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export default ActivityTimeline;
