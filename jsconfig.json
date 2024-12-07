@@ -42,7 +42,13 @@
       ],
       "@views/*": [
         "./src/views/*"
-      ]
+      ],
+      "@utils/*": [
+        "./src/utils/*"
+      ],
+      "@hooks/*": [
+        "./src/hooks/*"
+      ],
     }
   },
   "include": [

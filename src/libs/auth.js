@@ -3,6 +3,7 @@ import CredentialProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
+import NextAuth from 'next-auth'
 
 const prisma = new PrismaClient()
 
@@ -22,7 +23,10 @@ export const authOptions = {
        * As we are using our own Sign-in page, we do not need to change
        * username or password attributes manually in following credentials object.
        */
-      credentials: {},
+      credentials: {
+        username: { label: "Username", type: "text" },
+        password: { label: "Password", type: "password" }
+      },
       async authorize(credentials) {
         /*
          * You need to provide your own logic here that takes the credentials submitted and returns either
@@ -108,6 +112,7 @@ export const authOptions = {
          * in token which then will be available in the `session()` callback
          */
         token.name = user.name
+        token.role = user.role
       }
 
       return token
@@ -116,9 +121,12 @@ export const authOptions = {
       if (session.user) {
         // ** Add custom params to user in session which are added in `jwt()` callback via `token` parameter
         session.user.name = token.name
+        session.user.role = token.role
       }
 
       return session
     }
   }
 }
+
+export default NextAuth(authOptions)

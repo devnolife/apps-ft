@@ -6,7 +6,7 @@ import Pendaftaran from './Pendaftaran';
 import Confirmation from './Confirmation';
 
 const statusKpp = false;
-const konfirmasi = true
+const konfirmasi = false
 const Page = async () => {
   return (
     statusKpp ? (

@@ -9,6 +9,7 @@ import { Menu, MenuItem } from '@menu/vertical-menu'
 
 // Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
+import { useSession } from 'next-auth/react'
 
 // Styled Component Imports
 import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
@@ -27,6 +28,7 @@ const VerticalMenu = ({ scrollMenu }) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
+  const { data: session } = useSession()
 
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
@@ -58,11 +60,24 @@ const VerticalMenu = ({ scrollMenu }) => {
         <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
           Home
         </MenuItem>
-        <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
-          About
-        </MenuItem>
+        {session?.user?.role === 'admin' ? (
+          <>
+            <MenuItem href='/admin/dashboard' icon={<i className='tabler-dashboard' />}>
+              Admin Dashboard
+            </MenuItem>
+            <MenuItem href='/admin/settings' icon={<i className='tabler-settings' />}>
+              Admin Settings
+            </MenuItem>
+          </>
+        ) : (
+          <>
+            <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
+              About
+            </MenuItem>
+          </>
+        )}
       </Menu>
-      <Menu
+      {/* <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
         menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
         renderExpandIcon={({ open }) => <RenderExpandIcon open={open} transitionDuration={transitionDuration} />}
@@ -70,7 +85,7 @@ const VerticalMenu = ({ scrollMenu }) => {
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
         <GenerateVerticalMenu menuData={menuData(dictionary)} />
-      </Menu>
+      </Menu> */}
     </ScrollWrapper>
   )
 }

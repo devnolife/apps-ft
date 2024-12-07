@@ -1,6 +1,5 @@
 'use client'
 
-// MUI Imports
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
@@ -15,15 +14,6 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { styled } from '@mui/material/styles'
 import MuiTimeline from '@mui/lab/Timeline'
 
-import CustomAvatar from '@core/components/mui/Avatar'
-
-const Timeline = styled(MuiTimeline)({
-  '& .MuiTimelineItem-root': {
-    '&:before': {
-      display: 'none'
-    }
-  }
-})
 
 const ActivityTimeline = ({ data }) => {
   const renderTimelineItems = (activities) => {
