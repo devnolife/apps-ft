@@ -1,20 +1,8 @@
-// MUI Imports
 import { useTheme } from '@mui/material/styles'
-
-// Third-party Imports
 import PerfectScrollbar from 'react-perfect-scrollbar'
-
-// Component Imports
 import { Menu, MenuItem } from '@menu/vertical-menu'
-
-// Hook Imports
 import useVerticalNav from '@menu/hooks/useVerticalNav'
-import { useSession } from 'next-auth/react'
-
-// Styled Component Imports
 import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
-
-// Style Imports
 import menuItemStyles from '@core/styles/vertical/menuItemStyles'
 import menuSectionStyles from '@core/styles/vertical/menuSectionStyles'
 
@@ -28,7 +16,6 @@ const VerticalMenu = ({ scrollMenu }) => {
   // Hooks
   const theme = useTheme()
   const verticalNavOptions = useVerticalNav()
-  const { data: session } = useSession()
 
   // Vars
   const { isBreakpointReached, transitionDuration } = verticalNavOptions
@@ -57,26 +44,31 @@ const VerticalMenu = ({ scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='text-xs tabler-circle' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href='/home' icon={<i className='tabler-smart-home' />}>
-          Home
+        <MenuItem href='/admin' icon={<i className='tabler-dashboard' />}>
+          Admin Dashboard
         </MenuItem>
-        {session?.user?.role === 'admin' ? (
-          <>
-            <MenuItem href='/admin/dashboard' icon={<i className='tabler-dashboard' />}>
-              Admin Dashboard
-            </MenuItem>
-            <MenuItem href='/admin/settings' icon={<i className='tabler-settings' />}>
-              Admin Settings
-            </MenuItem>
-          </>
-        ) : (
-          <>
-            <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
-              About
-            </MenuItem>
-          </>
-        )}
-      </Menu>
+        <MenuItem href='/admin/settings' icon={<i className='tabler-settings' />}>
+          Admin Settings
+        </MenuItem>
+        <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
+          About
+        </MenuItem>
+        <MenuItem href='/dosen' icon={<i className='tabler-user' />}>
+          Dosen
+        </MenuItem>
+        <MenuItem href='/mahasiswa/dashboard' icon={<i className='tabler-dashboard' />}>
+          Student Dashboard
+        </MenuItem>
+        <MenuItem href='/pengajuan' icon={<i className='tabler-file' />}>
+          Submission
+        </MenuItem>
+        <MenuItem href='/laboratorium' icon={<i className='tabler-flask' />}>
+          Laboratory Page
+        </MenuItem>
+        <MenuItem href='/admin/lab' icon={<i className='tabler-settings' />}>
+          Lab Admin
+        </MenuItem>
+      </Menu >
       {/* <Menu
         popoutMenuOffset={{ mainAxis: 23 }}
         menuItemStyles={menuItemStyles(verticalNavOptions, theme)}
@@ -86,7 +78,7 @@ const VerticalMenu = ({ scrollMenu }) => {
       >
         <GenerateVerticalMenu menuData={menuData(dictionary)} />
       </Menu> */}
-    </ScrollWrapper>
+    </ScrollWrapper >
   )
 }
 

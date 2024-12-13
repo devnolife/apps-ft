@@ -1,8 +1,7 @@
-
 const themeConfig = {
-  templateName: 'Dashboard FT',
-  homePageUrl: '/home',
-  settingsCookieName: 'vuexy-mui-next-demo-1',
+  templateName: 'Dashboard',
+  homePageUrl: '/home', // Pastikan URL ini benar
+  settingsCookieName: 'fakultas teknik',
   mode: 'system', // 'system', 'light', 'dark'
   skin: 'default', // 'default', 'bordered'
   semiDark: false, // true, false

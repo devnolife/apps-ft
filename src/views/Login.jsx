@@ -2,16 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
-import Checkbox from '@mui/material/Checkbox'
 import Button from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Divider from '@mui/material/Divider'
-import { signIn } from 'next-auth/react'
 
 import classnames from 'classnames'
 import Link from '@components/Link'
@@ -20,8 +16,8 @@ import CustomTextField from '@core/components/mui/TextField'
 import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
-import useApi from '@hooks/useApi'
 
+import { signIn } from 'next-auth/react'
 
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -38,9 +34,11 @@ const LoginIllustration = styled('img')(({ theme }) => ({
 
 const Login = ({ mode }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const [nim, setNim] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [usernameError, setUsernameError] = useState('')
+  const [passwordError, setPasswordError] = useState('')
 
   const darkIllustration = '/images/illustrations/auth/v2-login-dark.png'
   const lightIllustration = '/images/illustrations/auth/auth-2.png'
@@ -61,19 +59,35 @@ const Login = ({ mode }) => {
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
   const handleSubmit = async (e) => {
+
     e.preventDefault()
+    let hasError = false
+    if (!username) {
+      setUsernameError('Username wajib diisi')
+      hasError = true
+    } else {
+      setUsernameError('')
+    }
+    if (!password) {
+      setPasswordError('Password wajib diisi')
+      hasError = true
+    } else {
+      setPasswordError('')
+    }
+    if (hasError) return
+
     setIsLoading(true)
     const result = await signIn('credentials', {
       redirect: false,
-      username: nim,
-      password
+      username: username,
+      password: password
     })
-    if (result.ok) {
-      router.push('/')
-    } else {
-      // Handle error
-    }
     setIsLoading(false)
+    if (result.ok) {
+      router.push('/dashboard')
+    } else {
+      alert('Login gagal')
+    }
   }
 
   return (
@@ -106,11 +120,12 @@ const Login = ({ mode }) => {
             <CustomTextField
               autoFocus
               fullWidth
-              label='Nim'
-              placeholder='Masukkan Nim Anda'
-              value={nim}
-              onChange={(e) => setNim(e.target.value)}
+              label='Username/Nim/Nidn'
+              placeholder='Masukkan Username Anda'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
             />
+            {usernameError && <Typography color='error'>{usernameError}</Typography>}
             <CustomTextField
               fullWidth
               label='Password'
@@ -129,6 +144,7 @@ const Login = ({ mode }) => {
                 )
               }}
             />
+            {passwordError && <Typography color='error'>{passwordError}</Typography>}
             <div className='flex flex-wrap items-center justify-between gap-x-3 gap-y-1'>
               <Typography className='text-end' color='primary' component={Link}>
                 Lupa Kata Sandi
@@ -138,7 +154,7 @@ const Login = ({ mode }) => {
               Login
             </Button>
 
-            <Divider className='gap-2 text-textPrimary'>crated by devnolife</Divider>
+            <Divider className='gap-2 text-textPrimary'>Created by devnolife</Divider>
             <div className='flex justify-center items-center gap-1.5'>
               <IconButton className='text-twitter' size='small'>
                 <i className='tabler-brand-twitter-filled' />
