@@ -47,8 +47,8 @@ const VerticalMenu = ({ scrollMenu }) => {
         <MenuItem href='/admin' icon={<i className='tabler-dashboard' />}>
           Admin Dashboard
         </MenuItem>
-        <MenuItem href='/admin/settings' icon={<i className='tabler-settings' />}>
-          Admin Settings
+        <MenuItem href='/administrasi/umum' icon={<i className='tabler-settings' />}>
+          Administrasi Umum
         </MenuItem>
         <MenuItem href='/about' icon={<i className='tabler-info-circle' />}>
           About
@@ -66,7 +66,7 @@ const VerticalMenu = ({ scrollMenu }) => {
           Laboratory Page
         </MenuItem>
         <MenuItem href='/admin/lab' icon={<i className='tabler-settings' />}>
-          Lab Admin
+          Persyaratan
         </MenuItem>
       </Menu >
       {/* <Menu

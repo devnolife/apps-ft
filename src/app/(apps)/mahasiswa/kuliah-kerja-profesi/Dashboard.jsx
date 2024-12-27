@@ -2,7 +2,7 @@ import { Grid } from "@mui/material";
 
 import ChartDashboard from "@views/mahasiswa/kuliah-kerja-profesi/ChartDashboard";
 import FormKegiatan from "@/views/mahasiswa/kuliah-kerja-profesi/FormKegiatan";
-import ActivityTimeline from "@/views/mahasiswa/kuliah-kerja-profesi/ActivityTimeline";
+import ActivityTimeline from "@/components/ActivityTimeline";
 
 const fakeData = {
   locationData: {
@@ -128,7 +128,7 @@ const fakeData = {
   ],
 };
 
-const Dashboard = () => {
+const Dashboard = ({ data }) => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sx={{ marginBottom: 1 }}>

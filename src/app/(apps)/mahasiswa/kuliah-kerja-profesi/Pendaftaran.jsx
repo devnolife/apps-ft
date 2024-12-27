@@ -154,13 +154,11 @@ const Pendaftaran = () => {
           >
             {steps.map((step, index) => {
               return (
-                <Step key={index} onClick={() => setActiveStep(index)}>
-                  <div style={{ pointerEvents: 'none' }}>
-                    <StepLabel icon={<></>} className='text-center'>
-                      {step.icon}
-                      <Typography className='step-title'>{step.title}</Typography>
-                    </StepLabel>
-                  </div>
+                <Step key={index}>
+                  <StepLabel icon={<></>} className='text-center' style={{ pointerEvents: 'none' }}>
+                    {step.icon}
+                    <Typography className='step-title'>{step.title}</Typography>
+                  </StepLabel>
                 </Step>
               )
             })}

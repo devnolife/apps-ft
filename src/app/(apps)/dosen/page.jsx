@@ -10,9 +10,10 @@ import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
 import CustomTabList from '@core/components/mui/TabList'
 
+const ListPersyaratan = dynamic(() => import('@/views/dosen/ListPersyaratan'))
 const ListPaMahasiswa = dynamic(() => import('@/views/dosen/ListMahasiswa'))
 const ListMahasiswaKKP = dynamic(() => import('@/views/dosen/ListMahasiswaKkp'))
-
+const TableSubmission = dynamic(() => import('@/views/dosen/TableSubmission'))
 const TabContent = () => {
   const [activeTab, setActiveTab] = useState('list-mahasiswa')
   const handleChange = (event, value) => {
@@ -25,6 +26,8 @@ const TabContent = () => {
         return <ListPaMahasiswa />
       case 'list-mahasiswa-kkp':
         return <ListMahasiswaKKP />
+      case 'list-persyaratan':
+        return <ListPersyaratan />
       default:
         return <div>Konten tidak tersedia</div>
     }
@@ -46,13 +49,18 @@ const TabContent = () => {
               />
               <Tab
                 icon={<i className='tabler-school' />}
-                value='notifications'
-                label='Pimpinan Prodi'
+                value='list-persyaratan'
+                label='Persyaratan'
                 iconPosition='start'
               />
               <Tab icon={<i className='tabler-link' />}
                 value='pembimbing'
                 label='Pembimbing'
+                iconPosition='start'
+              />
+              <Tab icon={<i className='tabler-link' />}
+                value='pengajuan'
+                label='Pengajuan Kuliah Kerja'
                 iconPosition='start'
               />
             </CustomTabList>

@@ -14,6 +14,16 @@ import AvatarGroup from '@mui/material/AvatarGroup'
 import { styled } from '@mui/material/styles'
 import MuiTimeline from '@mui/lab/Timeline'
 
+const Timeline = styled(MuiTimeline)({
+  paddingLeft: 0,
+  paddingRight: 0,
+  '& .MuiTimelineItem-root': {
+    width: '100%',
+    '&:before': {
+      display: 'none'
+    }
+  }
+})
 
 const ActivityTimeline = ({ data }) => {
   const renderTimelineItems = (activities) => {
@@ -50,31 +60,18 @@ const ActivityTimeline = ({ data }) => {
     });
   };
 
-  const additionalActivities = [
-    {
-      title: 'Pembentukan Kelompok',
-      date: '2023-11-01',
-      description: 'Kelompok KKP telah dibentuk oleh mahasiswa.',
-      color: 'primary',
-    },
-    {
-      title: 'Persetujuan Lokasi KKP',
-      date: '2023-11-05',
-      description: 'Tempat lokasi KKP telah disetujui oleh Ketua Prodi.',
-      color: 'success',
-    },
-  ];
-
   return (
     <Card>
       <CardHeader
-        title='Aktivitas Terbaru'
-        avatar={<i className='tabler-chart-bar text-textSecondary' />}
+        avatar={<i className='text-xl tabler-list-details' />}
+        title='Activity Timeline'
         titleTypographyProps={{ variant: 'h5' }}
+        // action={<OptionMenu options={['Share timeline', 'Suggest edits', 'Report bug']} />}
+        sx={{ '& .MuiCardHeader-avatar': { mr: 3 } }}
       />
       <CardContent>
         <Timeline>
-          {renderTimelineItems([...data, ...additionalActivities])}
+          {renderTimelineItems(data)}
         </Timeline>
       </CardContent>
     </Card>

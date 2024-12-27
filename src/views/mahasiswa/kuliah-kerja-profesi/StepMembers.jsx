@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Grid, Typography, Paper, Avatar, InputAdornment, Button, Box, IconButton, useMediaQuery, useTheme } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { Grid, Typography, Paper, Avatar, InputAdornment, Button, Box, IconButton, CircularProgress, useMediaQuery, useTheme } from '@mui/material';
 import CustomTextField from '@/@core/components/mui/TextField';
 import useApiGraphql from '@/hooks/useApiGraphql';
 import { formatName } from '@/utils';
@@ -9,7 +9,8 @@ const StepAnggota = ({ handleNext }) => {
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [groupMembers, setGroupMembers] = useState([]);
   const [errors, setErrors] = useState({});
-
+  const [loading, setLoading] = useState(false); // Add loading state
+  const [searchInitiated, setSearchInitiated] = useState(false); // Track search initiation
 
   const handleAddMember = () => {
     if (selectedStudent && groupMembers.length < 4) {
@@ -45,9 +46,9 @@ const StepAnggota = ({ handleNext }) => {
   `;
 
   const { data, error } = useApiGraphql(
-    nim.length === 12 ? 'https://sicekcok.if.unismuh.ac.id/graphql' : null,
+    searchInitiated ? 'https://sicekcok.if.unismuh.ac.id/graphql' : null,
     query,
-    nim.length === 12 ? { nim } : null
+    searchInitiated ? { nim } : null
   );
 
   const handleSearchStudent = () => {
@@ -61,21 +62,32 @@ const StepAnggota = ({ handleNext }) => {
       return;
     }
 
-    if (error) {
-      setErrors({ search: 'Mahasiswa tidak ditemukan atau terjadi kesalahan.' });
-    } else if (data && data.mahasiswa) {
-      const student = {
-        nim: data.mahasiswa.nim,
-        nama: data.mahasiswa.nama,
-        prodi: data.mahasiswa.kodeProdi,
-        avatar: `https://simak.unismuh.ac.id/upload/mahasiswa/${data.mahasiswa.nim}.jpg`,
-      };
-      setSelectedStudent(student);
-      setErrors({});
-    } else {
-      setErrors({ search: 'Mahasiswa tidak ditemukan.' });
-    }
+    setErrors({});
+    setSelectedStudent(null); // Clear previous selection
+    setLoading(true); // Set loading to true when search starts
+    setSearchInitiated(true); // Indicate that search has started
   };
+
+  useEffect(() => {
+    if (searchInitiated) {
+      if (data && data.mahasiswa) {
+        const student = {
+          nim: data.mahasiswa.nim,
+          nama: data.mahasiswa.nama,
+          prodi: data.mahasiswa.kodeProdi,
+          avatar: `https://simak.unismuh.ac.id/upload/mahasiswa/${data.mahasiswa.nim}.jpg`,
+        };
+        setSelectedStudent(student);
+        setErrors({});
+        setLoading(false); // Set loading to false when data is received
+        setSearchInitiated(false); // Reset search initiation
+      } else if (error) {
+        setErrors({ search: 'Mahasiswa tidak ditemukan atau terjadi kesalahan.' });
+        setLoading(false); // Set loading to false on error
+        setSearchInitiated(false); // Reset search initiation
+      }
+    }
+  }, [data, error, searchInitiated]);
 
   const renderStudentDetails = () => (
     <Box sx={{ marginTop: 4, textAlign: 'center' }}>
@@ -146,6 +158,11 @@ const StepAnggota = ({ handleNext }) => {
                 error={!!errors.search}
                 helperText={errors.search}
               />
+            </Box>
+          )}
+          {loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
+              <CircularProgress />
             </Box>
           )}
           {selectedStudent && renderStudentDetails()}

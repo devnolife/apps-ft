@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import CustomTextField from '@core/components/mui/TextField';
 
-const TableFilters = ({ setData, tableData, filterField, filterOptions, label }) => {
+const TableFilters = ({ setData, tableData, filterField, filterOptions = [], label }) => {
   const [filterValue, setFilterValue] = useState('');
 
   useEffect(() => {

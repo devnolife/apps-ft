@@ -48,22 +48,23 @@ const FileUploaderSingle = () => {
 
 const StepLokasi = ({ handleNext, data }) => {
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [locationOptions] = useState(data);
+  const [locationOptions, setLocationOptions] = useState(data);
   const [errors, setErrors] = useState({});
+  const [newLocation, setNewLocation] = useState({ name: '', address: '', keterangan: '' });
   const theme = useTheme();
 
   const validateFields = () => {
     const newErrors = {};
 
-    if (!selectedLocation?.name) {
+    if (!selectedLocation?.name && !newLocation.name) {
       newErrors.name = 'Nama Lokasi wajib diisi';
     }
 
-    if (!selectedLocation?.address) {
+    if (!selectedLocation?.address && !newLocation.address) {
       newErrors.address = 'Alamat wajib diisi';
     }
 
-    if (!selectedLocation?.keterangan) {
+    if (!selectedLocation?.keterangan && !newLocation.keterangan) {
       newErrors.keterangan = 'Keterangan wajib diisi';
     }
 
@@ -74,12 +75,17 @@ const StepLokasi = ({ handleNext, data }) => {
 
   const handleSave = () => {
     if (validateFields()) {
+      if (isNewLocation) {
+        setLocationOptions([...locationOptions, newLocation]);
+        setSelectedLocation(newLocation);
+      }
       handleNext();
     }
   };
 
   const handleCancel = () => {
     setSelectedLocation(null);
+    setNewLocation({ name: '', address: '', keterangan: '' });
   }
 
   const isNewLocation = !locationOptions.find(option => option.name === selectedLocation?.name);
@@ -106,7 +112,15 @@ const StepLokasi = ({ handleNext, data }) => {
           <Box component="form" noValidate autoComplete="off">
             <Autocomplete
               value={selectedLocation}
-              onChange={(event, newValue) => setSelectedLocation(newValue)}
+              onChange={(event, newValue) => {
+                if (newValue) {
+                  setSelectedLocation(newValue);
+                  setNewLocation({ name: '', address: '', keterangan: '' });
+                } else {
+                  setSelectedLocation(null);
+                  setNewLocation({ name: '', address: '', keterangan: '' });
+                }
+              }}
               options={locationOptions}
               getOptionLabel={(option) => option.name}
               renderOption={(props, option) => (
@@ -135,6 +149,15 @@ const StepLokasi = ({ handleNext, data }) => {
                   margin="normal"
                   error={!!errors.name}
                   helperText={errors.name}
+                  onChange={(e) => {
+                    const newName = e.target.value;
+                    setNewLocation({ ...newLocation, name: newName });
+                    if (!locationOptions.find(option => option.name === newName)) {
+                      setSelectedLocation({ name: newName, address: '', keterangan: '' });
+                    } else {
+                      setSelectedLocation(null);
+                    }
+                  }}
                   InputProps={{
                     ...params.InputProps,
                     startAdornment: (
@@ -152,10 +175,16 @@ const StepLokasi = ({ handleNext, data }) => {
               variant="outlined"
               fullWidth
               margin="normal"
-              value={selectedLocation ? selectedLocation.address : ''}
+              value={selectedLocation ? selectedLocation.address : newLocation.address}
               error={!!errors.address}
               helperText={errors.address}
-              onChange={(e) => setSelectedLocation({ ...selectedLocation, address: e.target.value })}
+              onChange={(e) => {
+                if (selectedLocation) {
+                  setSelectedLocation({ ...selectedLocation, address: e.target.value });
+                } else {
+                  setNewLocation({ ...newLocation, address: e.target.value });
+                }
+              }}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -173,8 +202,14 @@ const StepLokasi = ({ handleNext, data }) => {
               multiline
               rows={4}
               sx={{ '& .MuiInputBase-root.MuiFilledInput-root': { alignItems: 'baseline' } }}
-              value={selectedLocation ? selectedLocation.keterangan : ''}
-              onChange={(e) => setSelectedLocation({ ...selectedLocation, keterangan: e.target.value })}
+              value={selectedLocation ? selectedLocation.keterangan : newLocation.keterangan}
+              onChange={(e) => {
+                if (selectedLocation) {
+                  setSelectedLocation({ ...selectedLocation, keterangan: e.target.value });
+                } else {
+                  setNewLocation({ ...newLocation, keterangan: e.target.value });
+                }
+              }}
               error={!!errors.keterangan}
               helperText={errors.keterangan}
               InputProps={{
