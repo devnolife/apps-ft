@@ -65,7 +65,7 @@ const VerticalMenu = ({ scrollMenu }) => {
         <MenuItem href='/laboratorium' icon={<i className='tabler-flask' />}>
           Laboratory Page
         </MenuItem>
-        <MenuItem href='/admin/lab' icon={<i className='tabler-settings' />}>
+        <MenuItem href='/persyaratan' icon={<i className='tabler-settings' />}>
           Persyaratan
         </MenuItem>
       </Menu >

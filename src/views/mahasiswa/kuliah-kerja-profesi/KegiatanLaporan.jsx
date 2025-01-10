@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import {
   Button,
   DialogActions,
@@ -21,6 +22,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import { format, subDays, subMonths } from 'date-fns';
+
 import AnimationNotFound from '@components/DataNotFound'
 
 const Timeline = styled(MuiTimeline)({
@@ -33,6 +35,8 @@ const Timeline = styled(MuiTimeline)({
 
 const generateRandomColor = () => {
   const colors = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];
+
+
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
@@ -64,11 +68,14 @@ const KegiatanLaporan = ({ onClose, data }) => {
 
   const filterData = (data) => {
     const now = new Date();
+
     if (filter === '7days') {
       return data.filter(activity => new Date(activity.date) >= subDays(now, 7));
     } else if (filter === 'month') {
       return data.filter(activity => new Date(activity.date) >= subMonths(now, 1));
     }
+
+
     return data;
   };
 

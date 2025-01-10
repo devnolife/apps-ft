@@ -13,7 +13,7 @@ const Page = async () => {
       <Pendaftaran />
     ) : (
       konfirmasi ? (
-        <Confirmation />
+        <Pendaftaran />
       ) : (
         < Pendaftaran />
       )

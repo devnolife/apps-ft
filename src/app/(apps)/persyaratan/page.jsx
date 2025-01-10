@@ -1,82 +1,131 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
+'use client'
 import React, { useEffect, useState, useMemo } from "react";
+
 import axios from "axios";
-import { Select, MenuItem, Card, CardContent, Button, Typography, TablePagination } from "@mui/material";
+import { MenuItem, Card, CardContent, Button, Typography, TablePagination, Drawer, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress } from "@mui/material";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable, getFilteredRowModel, getPaginationRowModel, getSortedRowModel } from '@tanstack/react-table';
-import styles from '@core/styles/table.module.css';
+
 import classnames from 'classnames';
+
+import { toast } from 'react-toastify';
+
+import styles from '@core/styles/table.module.css';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
+import AddPersyaratan from "./add";
 
-const user = 'admin';
+
+import 'react-toastify/dist/ReactToastify.css';
+import useApiGraphql from '@hooks/useApiGraphql';
+
+
+const role = 'admin'
+
 const Page = () => {
   const [data, setData] = useState([]);
-  const [userType, setUserType] = useState(user);
   const [globalFilter, setGlobalFilter] = useState('');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [editData, setEditData] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+
+  const query = `
+    query GetAllKkpSyarat {
+      getAllKkpSyarat {
+        id
+        prodi_kode_prodi
+        nama
+        url_check
+        response_should_be
+        is_upload_file
+        is_activated
+      }
+    }
+  `;
+
+  const { data: fetchedData, error, isLoading } = useApiGraphql(query);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const query = userType === 'admin' ? `
-        query GetAllKkpSyarat {
-          getAllKkpSyarat {
-            id
-            prodi_kode_prodi
-            nama
-            url_check
-            response_should_be
-            is_upload_file
-            is_activated
-            is_deleted
-            created_by
-            updated_by
-            created_at
-            updated_at
-          }
-        }
-      ` : `
-        query GetAllKkpSyarat {
-          getAllKkpSyarat {
-            id
-            nama
-            logo
-            is_upload_file
-            is_activated
-          }
-        }
-      `;
-      try {
-        const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query });
-        setData(response.data.data.getAllKkpSyarat);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    if (fetchedData) {
+      setData(fetchedData.getAllKkpSyarat);
+    }
 
-    fetchData();
-  }, [userType]);
+    if (error) {
+      toast.error(process.env.NODE_ENV === 'production' ? 'Ada Kesalahan ..' : error.message);
+    }
+  }, [fetchedData, error]);
 
-  const handleUserTypeChange = (e) => {
-    setUserType(e.target.value);
+  const handleAddRequirement = () => {
+    setDrawerOpen(true);
   };
 
-  const filteredData = userType === 'admin' ? data : data.filter(row => row.created_by === user);
+  const handleDrawerClose = () => {
+    setDrawerOpen(false);
+  };
+
+  const handleEditRequirement = (id) => {
+    const requirement = data.find(item => item.id === id);
+
+    setEditData(requirement);
+    setDrawerOpen(true);
+  };
+
+  const handleDeleteRequirement = async () => {
+    const mutation = `
+      mutation RemoveKkpSyarat($id: String!) {
+        removeKkpSyarat(id: $id) {
+          id
+          nama
+        }
+    }
+    `;
+
+    try {
+      const { data: deleteData, error: deleteError } = useApiGraphql(mutation, { id: deleteId });
+
+      if (deleteError) {
+        throw new Error(deleteError.message);
+      }
+
+      setData(data.filter(item => item.id !== deleteId));
+      toast.success('Requirement deleted successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete requirement');
+    } finally {
+      setDeleteDialogOpen(false);
+      setDeleteId(null);
+    }
+  };
+
+  const confirmDeleteRequirement = (id) => {
+    setDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
 
   const columnHelper = createColumnHelper();
 
   const columns = useMemo(() => [
-    userType === 'admin' && columnHelper.accessor('prodi_kode_prodi', {
-      cell: info => info.getValue(),
+    columnHelper.accessor((row, index) => index + 1, {
+      cell: info => <div className="truncate">{info.getValue()}</div>,
+      header: 'ID'
+    }),
+    columnHelper.accessor('prodi_kode_prodi', {
+      cell: info => <div className="truncate">{info.getValue()}</div>,
       header: 'Kode Prodi'
     }),
     columnHelper.accessor('nama', {
-      cell: info => info.getValue(),
+      cell: info => <div className="truncate">{info.getValue()}</div>,
       header: 'Nama'
     }),
-    userType === 'admin' && columnHelper.accessor('url_check', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('url_check', {
+      cell: info => <div className="truncate">{info.getValue()}</div>,
       header: 'URL Check'
     }),
-    userType === 'admin' && columnHelper.accessor('response_should_be', {
-      cell: info => info.getValue(),
+    columnHelper.accessor('response_should_be', {
+      cell: info => <div className="truncate">{info.getValue()}</div>,
       header: 'Response Should Be'
     }),
     columnHelper.accessor('is_upload_file', {
@@ -87,18 +136,24 @@ const Page = () => {
       cell: info => info.getValue() ? <i className='text-xl tabler-icon-check' /> : <i className='text-xl tabler-icon-x' />,
       header: 'Is Activated'
     }),
-    userType === 'admin' && columnHelper.accessor('created_by', {
-      cell: info => info.getValue(),
-      header: 'Created By'
-    }),
-    userType === 'admin' && columnHelper.accessor('created_at', {
-      cell: info => new Date(info.getValue()).toLocaleString(),
-      header: 'Created At'
-    })
-  ].filter(Boolean), [userType]);
+    {
+      id: 'actions',
+      header: 'Actions',
+      cell: ({ row }) => (
+        <div className='flex gap-2'>
+          <IconButton onClick={() => handleEditRequirement(row.original.id)}>
+            <i className='tabler-edit' />
+          </IconButton>
+          <IconButton onClick={() => confirmDeleteRequirement(row.original.id)}>
+            <i className='tabler-trash' />
+          </IconButton>
+        </div>
+      )
+    }
+  ], []);
 
   const table = useReactTable({
-    data: filteredData,
+    data,
     columns,
     state: {
       globalFilter
@@ -109,6 +164,12 @@ const Page = () => {
     getPaginationRowModel: getPaginationRowModel(),
     onGlobalFilterChange: setGlobalFilter
   });
+
+  if (isLoading) {
+    return <div className='flex items-center justify-center h-screen'>
+      <CircularProgress />
+    </div>
+  }
 
   return (
     <Card>
@@ -140,6 +201,9 @@ const Page = () => {
             <MenuItem value='55202'>Informatika</MenuItem>
             <MenuItem value='31313'>PWK</MenuItem>
           </CustomTextField>
+          <Button variant="contained" color="primary" onClick={handleAddRequirement}>
+            Tambah Persyaratan
+          </Button>
         </div>
       </CardContent>
       <div className='overflow-x-auto'>
@@ -147,7 +211,6 @@ const Page = () => {
           <thead>
             {table.getHeaderGroups().map(headerGroup => (
               <tr key={headerGroup.id}>
-
                 {headerGroup.headers.map(header => (
                   <th key={header.id}>
                     {header.isPlaceholder ? null : (
@@ -200,6 +263,33 @@ const Page = () => {
           table.setPageIndex(page)
         }}
       />
+      <AddPersyaratan
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        setData={setData}
+        data={data}
+        editData={editData}
+        title={editData ? "Edit Persyaratan" : "Tambah Persyaratan"}
+      />
+      <Dialog
+        open={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this requirement?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteRequirement} color="primary">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Card>
   );
 };
