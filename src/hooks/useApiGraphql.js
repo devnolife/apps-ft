@@ -15,7 +15,6 @@ const useApiGraphql = (query, variables = null) => {
       if (!url || !query) return;
 
       let client;
-
       try {
         client = new ApolloClient({
           uri: url,
@@ -25,7 +24,6 @@ const useApiGraphql = (query, variables = null) => {
         console.log("🚀 ~ ApolloClient initialization error:", error);
         setError(error);
         setIsLoading(false);
-
         return;
       }
 

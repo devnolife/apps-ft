@@ -1,27 +1,20 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
-'use client'
+'use client';
+
 import React, { useEffect, useState, useMemo } from "react";
 
-import axios from "axios";
-import { MenuItem, Card, CardContent, Button, Typography, TablePagination, Drawer, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress } from "@mui/material";
+import { MenuItem, Card, CardContent, Button, TablePagination, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CircularProgress, Chip } from "@mui/material";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable, getFilteredRowModel, getPaginationRowModel, getSortedRowModel } from '@tanstack/react-table';
-
-import classnames from 'classnames';
-
 import { toast } from 'react-toastify';
 
 import styles from '@core/styles/table.module.css';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
 import AddPersyaratan from "./add";
-
-
-import 'react-toastify/dist/ReactToastify.css';
 import useApiGraphql from '@hooks/useApiGraphql';
 
-
-const role = 'admin'
+const role = 'admin'; // Ubah sesuai kebutuhan
 
 const Page = () => {
   const [data, setData] = useState([]);
@@ -30,17 +23,22 @@ const Page = () => {
   const [editData, setEditData] = useState(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleteId, setDeleteId] = useState(null);
+  const [selectedProdi, setSelectedProdi] = useState('');
+
+  const handleProdiChange = (event) => {
+    setSelectedProdi(event.target.value);
+  };
 
   const query = `
     query GetAllKkpSyarat {
       getAllKkpSyarat {
         id
-        prodi_kode_prodi
         nama
-        url_check
-        response_should_be
         is_upload_file
         is_activated
+        prodi_kode_prodi
+        url_check
+        response_should_be
       }
     }
   `;
@@ -65,92 +63,94 @@ const Page = () => {
     setDrawerOpen(false);
   };
 
-  const handleEditRequirement = (id) => {
-    const requirement = data.find(item => item.id === id);
-
-    setEditData(requirement);
+  const handleEdit = (row) => {
+    setEditData(row);
     setDrawerOpen(true);
   };
 
-  const handleDeleteRequirement = async () => {
-    const mutation = `
-      mutation RemoveKkpSyarat($id: String!) {
-        removeKkpSyarat(id: $id) {
-          id
-          nama
-        }
-    }
-    `;
-
-    try {
-      const { data: deleteData, error: deleteError } = useApiGraphql(mutation, { id: deleteId });
-
-      if (deleteError) {
-        throw new Error(deleteError.message);
-      }
-
-      setData(data.filter(item => item.id !== deleteId));
-      toast.success('Requirement deleted successfully');
-    } catch (error) {
-      console.error(error);
-      toast.error('Failed to delete requirement');
-    } finally {
-      setDeleteDialogOpen(false);
-      setDeleteId(null);
-    }
-  };
-
-  const confirmDeleteRequirement = (id) => {
+  const handleDelete = (id) => {
     setDeleteId(id);
     setDeleteDialogOpen(true);
   };
 
   const columnHelper = createColumnHelper();
 
-  const columns = useMemo(() => [
-    columnHelper.accessor((row, index) => index + 1, {
-      cell: info => <div className="truncate">{info.getValue()}</div>,
-      header: 'ID'
-    }),
-    columnHelper.accessor('prodi_kode_prodi', {
-      cell: info => <div className="truncate">{info.getValue()}</div>,
-      header: 'Kode Prodi'
-    }),
-    columnHelper.accessor('nama', {
-      cell: info => <div className="truncate">{info.getValue()}</div>,
-      header: 'Nama'
-    }),
-    columnHelper.accessor('url_check', {
-      cell: info => <div className="truncate">{info.getValue()}</div>,
-      header: 'URL Check'
-    }),
-    columnHelper.accessor('response_should_be', {
-      cell: info => <div className="truncate">{info.getValue()}</div>,
-      header: 'Response Should Be'
-    }),
-    columnHelper.accessor('is_upload_file', {
-      cell: info => info.getValue() ? <i className='text-xl tabler-icon-file' /> : <i className='text-xl tabler-icon-x' />,
-      header: 'Is Upload File'
-    }),
-    columnHelper.accessor('is_activated', {
-      cell: info => info.getValue() ? <i className='text-xl tabler-icon-check' /> : <i className='text-xl tabler-icon-x' />,
-      header: 'Is Activated'
-    }),
-    {
-      id: 'actions',
-      header: 'Actions',
-      cell: ({ row }) => (
-        <div className='flex gap-2'>
-          <IconButton onClick={() => handleEditRequirement(row.original.id)}>
-            <i className='tabler-edit' />
-          </IconButton>
-          <IconButton onClick={() => confirmDeleteRequirement(row.original.id)}>
-            <i className='tabler-trash' />
-          </IconButton>
-        </div>
-      )
+  const columns = useMemo(() => {
+    const baseColumns = [
+      columnHelper.accessor((row, index) => index + 1, {
+        cell: info => <div className="truncate">{info.getValue()}</div>,
+        header: 'ID'
+      }),
+      columnHelper.accessor('nama', {
+        cell: info => <div className="break-words truncate">{info.getValue()}</div>,
+        header: 'Nama'
+      }),
+      columnHelper.accessor('is_upload_file', {
+        cell: info => (
+          <Chip
+            variant="tonal"
+            label={info.getValue() ? 'Iya' : 'Tidak'}
+            color={info.getValue() ? 'success' : 'error'}
+          />
+        ),
+        header: 'Upload File'
+      }),
+      columnHelper.accessor('is_activated', {
+        cell: info => (
+          <Chip
+            variant="tonal"
+            label={info.getValue() ? 'Iya' : 'Tidak'}
+            color={info.getValue() ? 'success' : 'error'}
+          />
+        ),
+        header: 'Aktif'
+      })
+    ];
+
+    if (role === 'admin') {
+      return [
+        ...baseColumns,
+        columnHelper.accessor('prodi_kode_prodi', {
+          cell: info => <div className="truncate">{info.getValue()}</div>,
+          header: 'Kode Prodi'
+        }),
+        columnHelper.accessor('url_check', {
+          cell: info => <div className="truncate">{info.getValue()}</div>,
+          header: 'URL Check'
+        }),
+        columnHelper.accessor('response_should_be', {
+          cell: info => <div className="truncate">{info.getValue()}</div>,
+          header: 'Response Should Be'
+        }),
+        {
+          id: 'actions',
+          header: 'Actions',
+          cell: ({ row }) => (
+            <div className="flex gap-4">
+              <i onClick={() => handleEdit(row.original)}
+                className="tabler-icon tabler-edit" />
+              <i onClick={() => handleDelete(row.original.id)} className="tabler-icon tabler-trash" />
+            </div>
+          )
+        }
+      ];
     }
-  ], []);
+
+    return [
+      ...baseColumns,
+      {
+        id: 'actions',
+        header: 'Actions',
+        cell: ({ row }) => (
+          <div className="flex gap-4">
+            <i onClick={() => handleEdit(row.original)}
+              className="tabler-icon tabler-edit" />
+            <i onClick={() => handleDelete(row.original.id)} className="tabler-icon tabler-trash" />
+          </div>
+        )
+      }
+    ];
+  }, [role]);
 
   const table = useReactTable({
     data,
@@ -171,40 +171,41 @@ const Page = () => {
     </div>
   }
 
+  const handleConfirmDelete = () => {
+    // Add your delete logic here
+    setDeleteDialogOpen(false);
+  };
+
   return (
     <Card>
       <CardContent className='flex flex-wrap justify-between gap-4 max-sm:flex-col sm:items-center'>
-        <CustomTextField
-          value={globalFilter ?? ''}
-          onChange={value => setGlobalFilter(String(value))}
-          placeholder='Search'
-          className='max-sm:is-full'
-        />
-        <div className='flex items-start gap-4 max-sm:flex-col sm:items-center max-sm:is-full'>
-          <CustomTextField
-            select
-            value={table.getState().pagination.pageSize}
-            onChange={e => table.setPageSize(Number(e.target.value))}
-            className="is-full sm:is-[70px]"
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 400
-                }
-              }
-            }}
-          >
-            <MenuItem value='prodi'>Prodi</MenuItem>
-            <MenuItem value='22021'>Pengairan</MenuItem>
-            <MenuItem value='22022'>Elektro</MenuItem>
-            <MenuItem value='32322'>Arsitektur</MenuItem>
-            <MenuItem value='55202'>Informatika</MenuItem>
-            <MenuItem value='31313'>PWK</MenuItem>
-          </CustomTextField>
-          <Button variant="contained" color="primary" onClick={handleAddRequirement}>
-            Tambah Persyaratan
-          </Button>
-        </div>
+        {role === 'admin' && (
+          <>
+            <CustomTextField
+              value={globalFilter ?? ''}
+              onChange={value => setGlobalFilter(String(value))}
+              placeholder='Search'
+              className='max-sm:is-full'
+            />
+            <div className='flex gap-3'>
+              <CustomTextField
+                select
+                value={selectedProdi}
+                onChange={handleProdiChange}
+                variant="outlined"
+              >
+                <MenuItem value="55202">Informatika</MenuItem>
+                <MenuItem value="22012">Pengairan</MenuItem>
+                <MenuItem value="22012">Elektro</MenuItem>
+                <MenuItem value="22012">Arsitektur</MenuItem>
+                <MenuItem value="55511">PWK</MenuItem>
+              </CustomTextField>
+              <Button variant="contained" color="primary" onClick={handleAddRequirement}>
+                Tambah Persyaratan
+              </Button>
+            </div>
+          </>
+        )}
       </CardContent>
       <div className='overflow-x-auto'>
         <table className={styles.table}>
@@ -213,21 +214,7 @@ const Page = () => {
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map(header => (
                   <th key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <div
-                        className={classnames({
-                          'flex items-center': header.column.getIsSorted(),
-                          'cursor-pointer select-none': header.column.getCanSort()
-                        })}
-                        onClick={header.column.getToggleSortingHandler()}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {{
-                          asc: <i className='text-xl tabler-chevron-up' />,
-                          desc: <i className='text-xl tabler-chevron-down' />
-                        }[header.column.getIsSorted()] ?? null}
-                      </div>
-                    )}
+                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
@@ -260,7 +247,7 @@ const Page = () => {
         rowsPerPage={table.getState().pagination.pageSize}
         page={table.getState().pagination.pageIndex}
         onPageChange={(_, page) => {
-          table.setPageIndex(page)
+          table.setPageIndex(page);
         }}
       />
       <AddPersyaratan
@@ -285,7 +272,7 @@ const Page = () => {
           <Button onClick={() => setDeleteDialogOpen(false)} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleDeleteRequirement} color="primary">
+          <Button onClick={handleConfirmDelete} color="primary">
             Delete
           </Button>
         </DialogActions>

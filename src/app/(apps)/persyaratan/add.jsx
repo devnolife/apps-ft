@@ -26,10 +26,11 @@ const initialData = {
   response_should_be: '',
   is_upload_file: false,
   is_activated: false,
+  is_editable: false, // new property
 }
 
 const AddPersyaratan = props => {
-  const { open, onClose, setData, data, editData, title } = props
+  const { open, onClose, setData, data, editData, title, role } = props
   const [formData, setFormData] = useState(initialData)
   const [error, setError] = useState(null)
   const [mutation, setMutation] = useState(null)
@@ -51,6 +52,7 @@ const AddPersyaratan = props => {
       response_should_be: '',
       is_upload_file: false,
       is_activated: false,
+      is_editable: false, // new property
     }
   })
 
@@ -58,6 +60,9 @@ const AddPersyaratan = props => {
     if (editData) {
       setFormData(editData);
       resetForm(editData);
+    } else {
+      setFormData(initialData);
+      resetForm(initialData);
     }
   }, [editData, resetForm]);
 
@@ -82,7 +87,7 @@ const AddPersyaratan = props => {
 
     const variablesData = editData ? {
       id: editData.id,
-      input: formData
+      input: { ...editData, ...formData }
     } : {
       input: formData
     };
@@ -133,19 +138,21 @@ const AddPersyaratan = props => {
         <div className='p-6'>
           {error && <Alert severity="error">{error}</Alert>}
           <form onSubmit={handleSubmit(data => onSubmit(data))} className='flex flex-col gap-5'>
-            <Controller
-              name='prodi_kode_prodi'
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  fullWidth
-                  label='Prodi Kode Prodi'
-                  {...(errors.prodi_kode_prodi && { error: true, helperText: 'Kolom ini wajib diisi.' })}
-                />
-              )}
-            />
+            {role === 'admin' && (
+              <Controller
+                name='prodi_kode_prodi'
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <CustomTextField
+                    {...field}
+                    fullWidth
+                    label='Prodi Kode Prodi'
+                    {...(errors.prodi_kode_prodi && { error: true, helperText: 'Kolom ini wajib diisi.' })}
+                  />
+                )}
+              />
+            )}
             <Controller
               name='nama'
               control={control}
@@ -159,42 +166,46 @@ const AddPersyaratan = props => {
                 />
               )}
             />
-            <Controller
-              name='logo'
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  fullWidth
-                  label='Logo'
+            {role === 'admin' && (
+              <>
+                <Controller
+                  name='logo'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Logo'
+                    />
+                  )}
                 />
-              )}
-            />
-            <Controller
-              name='url_check'
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  fullWidth
-                  label='URL Check'
+                <Controller
+                  name='url_check'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='URL Check'
+                    />
+                  )}
                 />
-              )}
-            />
-            <Controller
-              name='response_should_be'
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <CustomTextField
-                  {...field}
-                  fullWidth
-                  label='Response Should Be'
+                <Controller
+                  name='response_should_be'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field }) => (
+                    <CustomTextField
+                      {...field}
+                      fullWidth
+                      label='Response Should Be'
+                    />
+                  )}
                 />
-              )}
-            />
+              </>
+            )}
             <div className='flex items-center'>
               <Controller
                 name='is_upload_file'
@@ -229,10 +240,11 @@ const AddPersyaratan = props => {
             </div>
             <div className='flex items-center gap-4'>
               <Button variant='contained' type='submit'>
-                Tambah
+                {editData ? 'Update' : 'Tambah'}
               </Button>
               <Button variant='tonal' color='error' type='reset' onClick={handleReset}>
                 Batalkan
+
               </Button>
             </div>
           </form>
