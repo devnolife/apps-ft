@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
+
 import { MenuItem } from '@mui/material';
+
 import CustomTextField from '@core/components/mui/TextField';
 
 const TableFilters = ({ setData, tableData, filterField, filterOptions = [], label }) => {
@@ -8,6 +10,7 @@ const TableFilters = ({ setData, tableData, filterField, filterOptions = [], lab
   useEffect(() => {
     const filteredData = tableData?.filter(item => {
       if (filterValue && String(item[filterField]) !== filterValue) return false;
+
       return true;
     });
 

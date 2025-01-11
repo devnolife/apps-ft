@@ -1,15 +1,17 @@
 'use client'
 import { useState, useMemo } from 'react'
+
 import IconButton from '@mui/material/IconButton'
 import Chip from '@mui/material/Chip'
 import { createColumnHelper } from '@tanstack/react-table'
+
+import { Checkbox, Typography } from '@mui/material'
+
 import DataTable from '@components/DataTable'
 import ViewLetter from './ViewLetter'
-import CratedLetter from './CardWelcome'
 import OptionMenu from '@core/components/option-menu'
 import { getInitials } from '@/utils/getInitials'
 import CustomAvatar from '@core/components/mui/Avatar'
-import { Checkbox, Typography } from '@mui/material'
 
 const statusColor = {
   Diproses: 'warning',
@@ -21,7 +23,7 @@ const columnHelper = createColumnHelper()
 
 const TableLetter = ({ db }) => {
   const [addUserOpen, setAddUserOpen] = useState(false)
-  const [data, setData] = useState(...[db])
+  const [data, setData] = useState(db)
   const [viewSuratOpen, setViewSuratOpen] = useState(false)
   const [selectedSurat, setSelectedSurat] = useState(null)
 
@@ -31,12 +33,12 @@ const TableLetter = ({ db }) => {
   }
 
   const getAvatar = params => {
-    const { avatar, fullName } = params
+    const { avatar, pengaju } = params
 
     if (avatar) {
       return <CustomAvatar src={avatar} size={34} />
     } else {
-      return <CustomAvatar size={34}>{getInitials(fullName)}</CustomAvatar>
+      return <CustomAvatar size={34}>{getInitials(pengaju || '')}</CustomAvatar>
     }
   }
 
@@ -92,7 +94,7 @@ const TableLetter = ({ db }) => {
         header: 'Penerima',
         cell: ({ row }) => (
           <div className='flex items-center gap-4'>
-            {getAvatar({ avatar: row.original.avatar, fullName: row.original.penerima })}
+            {getAvatar({ avatar: row.original.avatar, pengaju: row.original.penerima })}
             <div className='flex flex-col'>
               <Typography color='text.primary' className='font-medium'>
                 {row.original.penerima}
@@ -161,16 +163,10 @@ const TableLetter = ({ db }) => {
       <DataTable
         data={data}
         columns={columns}
-        title='Filters'
+        title='Filter Surat'
         globalFilterPlaceholder='Search User'
         addButtonLabel='Tambahkan Surat Baru'
         onAddButtonClick={() => setAddUserOpen(!addUserOpen)}
-      />
-      <CratedLetter
-        open={addUserOpen}
-        handleClose={() => setAddUserOpen(!addUserOpen)}
-        userData={data}
-        setData={setData}
       />
       {selectedSurat && (
         <ViewLetter

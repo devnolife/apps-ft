@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Modal, Box, Typography, Grid, Button, IconButton } from '@mui/material'
+import { Modal, Box, Typography, Grid, Button, IconButton, Divider, Chip } from '@mui/material'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -20,6 +20,11 @@ const ViewLetter = ({ open, handleClose, suratData }) => {
     p: 4
   }
 
+  const iconStyle = {
+    verticalAlign: 'middle',
+    marginRight: '8px'
+  }
+
   return (
     <Modal
       open={open}
@@ -28,43 +33,46 @@ const ViewLetter = ({ open, handleClose, suratData }) => {
       aria-describedby='view-surat-description'
     >
       <Box sx={style}>
-        <Grid container justifyContent='space-between' alignItems='center' mb={3}>
-          <Typography id='view-surat-title' variant='h6' component='h2'>
-            Detail Surat
-          </Typography>
+        <Grid container justifyContent='flex-end' alignItems='center' mb={3}>
           <IconButton onClick={handleClose}>
-            <i className='tabler-x' />
+            <i className='text-[20px] tabler-x' />
           </IconButton>
         </Grid>
 
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <CustomAvatar src={avatar} size={70} />
+        <Grid container spacing={2} direction='column' alignItems='center'>
+          <Grid item>
+            <CustomAvatar src={avatar} size={100} />
           </Grid>
-          <Grid item xs={9}>
+          <Grid item>
+            <Divider><Chip label="Detail Surat" /></Divider>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2} mt={2}>
+          <Grid item xs={12}>
             <Typography variant='body1'>
-              <strong>Nomor Surat:</strong> {nomorSurat}
+              <i className='tabler-file-text' style={iconStyle} /> <strong>Nomor Surat:</strong> {nomorSurat}
             </Typography>
             <Typography variant='body1'>
-              <strong>Judul Surat:</strong> {judulSurat}
+              <i className='tabler-heading' style={iconStyle} /> <strong>Judul Surat:</strong> {judulSurat}
             </Typography>
             <Typography variant='body1'>
-              <strong>Jenis Surat:</strong> {jenisSurat}
+              <i className='tabler-tag' style={iconStyle} /> <strong>Jenis Surat:</strong> {jenisSurat}
             </Typography>
             <Typography variant='body1'>
-              <strong>Penerima:</strong> {penerima}
+              <i className='tabler-user' style={iconStyle} /> <strong>Penerima:</strong> {penerima}
             </Typography>
             <Typography variant='body1'>
-              <strong>Kontak:</strong> {kontak}
+              <i className='tabler-phone' style={iconStyle} /> <strong>Kontak:</strong> {kontak}
             </Typography>
             <Typography variant='body1'>
-              <strong>Email:</strong> {email}
+              <i className='tabler-mail' style={iconStyle} /> <strong>Email:</strong> {email}
             </Typography>
             <Typography variant='body1'>
-              <strong>Status Surat:</strong> {statusSurat}
+              <i className='tabler-info-circle' style={iconStyle} /> <strong>Status Surat:</strong> {statusSurat}
             </Typography>
             <Typography variant='body1'>
-              <strong>Metode Pengambilan:</strong> {metodePengambilan}
+              <i className='tabler-package' style={iconStyle} /> <strong>Metode Pengambilan:</strong> {metodePengambilan}
             </Typography>
           </Grid>
         </Grid>

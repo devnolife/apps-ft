@@ -37,8 +37,6 @@ const Page = () => {
         is_upload_file
         is_activated
         prodi_kode_prodi
-        url_check
-        response_should_be
       }
     }
   `;

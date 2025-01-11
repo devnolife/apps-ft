@@ -9,7 +9,7 @@ import CustomAvatar from '@core/components/mui/Avatar'
 
 const StatisticCardSurat = ({ dataSurat }) => {
   return (
-    <Card>
+    <Card sx={{ height: '100%', width: '100%' }}>
       <CardHeader
         title='Statistik Administrasi dan Persuratan'
         action={
@@ -18,8 +18,8 @@ const StatisticCardSurat = ({ dataSurat }) => {
           </Typography>
         }
       />
-      <CardContent className='flex flex-wrap justify-between gap-4'>
-        <Grid container spacing={4}>
+      <CardContent className='flex items-center justify-center'>
+        <Grid container spacing={4} justifyContent='center'>
           {dataSurat.map((item, index) => (
             <Grid item xs={6} md={3} key={index} className='flex items-center gap-4'>
               <CustomAvatar color={item.color} variant='rounded' size={40} skin='light'>

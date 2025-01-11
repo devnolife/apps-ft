@@ -1,4 +1,6 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useEffect } from 'react';
+
 import { toast } from "react-toastify";
 import axios from "axios";
 
@@ -13,6 +15,7 @@ const useApi = (url, method = 'get', body = null) => {
     const fetchData = async () => {
       try {
         const result = await useApiRequest(url, method, body, setIsLoading);
+
         setData(result);
       } catch (error) {
         setError(error);
@@ -28,6 +31,7 @@ const useApi = (url, method = 'get', body = null) => {
 const useApiRequest = async (url, method = 'get', body = null, setLoading = null) => {
   try {
     if (setLoading) setLoading(true);
+
     const options = {
       method,
       headers: {
@@ -37,6 +41,7 @@ const useApiRequest = async (url, method = 'get', body = null, setLoading = null
     };
 
     const response = await axios(url, options);
+
     toast.success('Request successful!');
 
     if (method.toLowerCase() === 'get' || method.toLowerCase() === 'post') {

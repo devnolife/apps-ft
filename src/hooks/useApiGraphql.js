@@ -1,52 +1,96 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { useRouter } from 'next/navigation';
 
-const url = 'https://superapps.if.unismuh.ac.id/graphql';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const useApiGraphql = (query, variables = null) => {
+const url = 'https://rps.if.unismuh.ac.id/graphql';
 
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+let isLoggingOut = false;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!url || !query) return;
+const useGraphql = (accessToken) => {
+  const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-      let client;
-      try {
-        client = new ApolloClient({
-          uri: url,
-          cache: new InMemoryCache()
-        });
-      } catch (error) {
-        console.log("🚀 ~ ApolloClient initialization error:", error);
-        setError(error);
-        setIsLoading(false);
-        return;
+  const handleTokenExpiration = (error) => {
+    if (!isLoggingOut) {
+      const isUnauthorized = error.response && error.response.status === 401;
+      const isGraphqlUnauthorized = error.response && error.response.data.errors && error.response.data.errors.some(err => err.extensions.code === 'UNAUTHENTICATED');
+
+      if (isUnauthorized || isGraphqlUnauthorized) {
+        isLoggingOut = true;
+        router.push('/login');
+      }
+    }
+  };
+
+  const query = async (
+    query,
+    variables = {},
+    { successMessage = 'Permintaan Berhasil', errorMessage = 'Masalah Permintaan', skipSuccessToast = false } = {}
+  ) => {
+    setLoading(true);
+
+    try {
+      const response = await axios.post(url, {
+        query,
+        variables
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if (response.data.errors) {
+        toast.error("Terjadi kesalahan saat memproses permintaan");
       }
 
-      try {
-        const result = await client.query({
-          query: gql`${query}`,
-          variables
-        });
-
-        setData(result.data);
-      } catch (error) {
-        console.log("🚀 ~ fetchData ~ error:", error)
-        setError(error);
-      } finally {
-        setIsLoading(false);
+      if (!skipSuccessToast) {
+        toast.success(successMessage);
       }
-    };
 
-    fetchData();
-  }, [query, variables]);
+      return response.data;
+    } catch (error) {
+      handleTokenExpiration(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  return { data, error, isLoading };
+  const mutate = async (
+    mutation,
+    variables = {},
+    { successMessage = 'Permintaan Berhasil', errorMessage = 'Masalah Permintaan', skipSuccessToast = false } = {}
+  ) => {
+    setLoading(true);
+
+    try {
+      const response = await axios.post(url, {
+        query: mutation,
+        variables
+      }, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if (response.data?.errors && response.data.errors.length > 0) {
+        throw new Error(response.data.errors[0].message);
+      } else {
+        return response.data;
+      }
+    } catch (error) {
+      handleTokenExpiration(error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { query, mutate, loading };
 };
 
-
-export default useApiGraphql;
+export default useGraphql;

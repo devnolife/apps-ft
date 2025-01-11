@@ -4,6 +4,7 @@ import CardWelcome from '@/views/administrasi/umum/dashboard/CardWelcome'
 import StatisticSurat from '@/views/administrasi/umum/dashboard/StatisticCard'
 import TableLetter from '@/views/administrasi/umum/dashboard/TableLetter'
 import TimeLine from '@/views/administrasi/umum/dashboard/TimeLine'
+
 const jumlahSurat = 10
 
 const data = [
@@ -33,17 +34,14 @@ const data = [
   }
 ]
 
-
 const dataSurat = [
   {
     id: 1,
     nomorSurat: '001/KKP/2024',
     judulSurat: 'Pengajuan KKP',
     jenisSurat: 'Pengajuan',
-    penerima: 'Arief Kurniawan',
-    negara: 'Indonesia',
-    kontak: '(479) 232-9151',
-    email: 'arief.kurniawan@abc.net.au',
+    pengaju: 'Arief Kurniawan',
+    nim: '4792329151',
     statusSurat: 'Diproses',
     avatar: '',
     avatarColor: 'primary',
@@ -54,10 +52,8 @@ const dataSurat = [
     nomorSurat: '002/Beasiswa/2024',
     judulSurat: 'Rekomendasi Beasiswa',
     jenisSurat: 'Rekomendasi',
-    penerima: 'Nur Azizah',
-    negara: 'Indonesia',
-    kontak: '(472) 607-9137',
-    email: 'nur.azizah@imgur.com',
+    pengaju: 'Nur Azizah',
+    nim: '4726079137',
     statusSurat: 'Menunggu persetujuan',
     avatar: '/images/avatars/3.png',
     metodePengambilan: 'Diambil langsung'
@@ -67,10 +63,8 @@ const dataSurat = [
     nomorSurat: '003/Lulus/2024',
     judulSurat: 'Surat Keterangan Lulus',
     jenisSurat: 'Keterangan',
-    penerima: 'Dwi Santoso',
-    negara: 'Indonesia',
-    kontak: '(321) 264-4599',
-    email: 'dwi.santoso@who.int',
+    pengaju: 'Dwi Santoso',
+    nim: '3212644599',
     statusSurat: 'Disetujui',
     avatar: '/images/avatars/1.png',
     metodePengambilan: 'Dikirim via email'
@@ -80,10 +74,8 @@ const dataSurat = [
     nomorSurat: '004/SKP/2024',
     judulSurat: 'Pengajuan SKP',
     jenisSurat: 'Pengajuan',
-    penerima: 'Cyrill Risby',
-    negara: 'Indonesia',
-    kontak: '(923) 690-6806',
-    email: 'cyrill.risby@wordpress.com',
+    pengaju: 'Cyrill Risby',
+    nim: '9236906806',
     statusSurat: 'Pengajuan',
     avatar: '/images/avatars/3.png',
     metodePengambilan: 'Dikirim via email'
@@ -93,10 +85,8 @@ const dataSurat = [
     nomorSurat: '005/KKP/2024',
     judulSurat: 'Surat Pengantar KKP',
     jenisSurat: 'Pengantar',
-    penerima: 'Maggy Hurran',
-    negara: 'Indonesia',
-    kontak: '(669) 914-1078',
-    email: 'maggy.hurran@yahoo.co.jp',
+    pengaju: 'Maggy Hurran',
+    nim: '6699141078',
     statusSurat: 'Menunggu persetujuan',
     avatar: '/images/avatars/1.png',
     metodePengambilan: 'Diambil langsung'
@@ -106,10 +96,8 @@ const dataSurat = [
     nomorSurat: '006/Beasiswa/2024',
     judulSurat: 'Pengajuan Beasiswa',
     jenisSurat: 'Pengajuan',
-    penerima: 'Silvain Halstead',
-    negara: 'Indonesia',
-    kontak: '(958) 973-3093',
-    email: 'silvain.halstead@shinystat.com',
+    pengaju: 'Silvain Halstead',
+    nim: '9589733093',
     statusSurat: 'Diproses',
     avatar: '',
     avatarColor: 'error',
@@ -120,10 +108,8 @@ const dataSurat = [
     nomorSurat: '007/Lulus/2024',
     judulSurat: 'Surat Keterangan Lulus',
     jenisSurat: 'Keterangan',
-    penerima: 'Breena Gallemore',
-    negara: 'Indonesia',
-    kontak: '(825) 977-8152',
-    email: 'breena.gallemore@boston.com',
+    pengaju: 'Breena Gallemore',
+    nim: '8259778152',
     statusSurat: 'Disetujui',
     avatar: '',
     avatarColor: 'warning',
@@ -134,37 +120,25 @@ const dataSurat = [
     nomorSurat: '008/Beasiswa/2024',
     judulSurat: 'Rekomendasi Beasiswa',
     jenisSurat: 'Rekomendasi',
-    penerima: 'Kathryne Liger',
-    negara: 'Indonesia',
-    kontak: '(187) 440-0934',
-    email: 'kathryne.liger@vinaora.com',
+    pengaju: 'Kathryne Liger',
+    nim: '1874400934',
     statusSurat: 'Diproses',
     avatar: '/images/avatars/4.png',
     metodePengambilan: 'Diambil langsung'
   },
-  {
-    id: 9,
-    nomorSurat: '009/SKP/2024',
-    judulSurat: 'Surat Pengantar SKP',
-    jenisSurat: 'Pengantar',
-    penerima: 'Franz Scotfurth',
-    negara: 'Indonesia',
-    kontak: '(978) 146-5443',
-    email: 'franz.scotfurth@dailymotion.com',
-    statusSurat: 'Menunggu persetujuan',
-    avatar: '/images/avatars/2.png',
-    metodePengambilan: 'Dikirim via email'
-  }
 ]
+
 
 const DashboardUmum = () => {
   return (
     <Grid container spacing={4}>
-      <Grid item xs={12} md={4}>
-        <CardWelcome jumlahSurat={jumlahSurat} />
-      </Grid>
-      <Grid item xs={12} md={8}>
-        <StatisticSurat dataSurat={data} />
+      <Grid container spacing={2} sx={{ mb: 3 }}>
+        <Grid item xs={12} md={4}>
+          <CardWelcome jumlahSurat={jumlahSurat} />
+        </Grid>
+        <Grid item xs={12} md={8}>
+          <StatisticSurat dataSurat={data} />
+        </Grid>
       </Grid>
       <Grid container spacing={2}>
         <Grid item xs={12} md={8}>

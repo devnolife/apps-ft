@@ -17,7 +17,6 @@ import {
   Typography,
   LinearProgress,
   Chip,
-  CardHeader
 } from '@mui/material'
 
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -34,28 +33,34 @@ export default function DashboardPage() {
           Panduan dan informasi terkait kuliah kerja profesi dan kuliah kerja profesi plus
         </Typography>
       </Box>
-
-      <Box sx={{ mb: 4 }}>
-        <Card sx={{ maxWidth: '100%' }}>
-          <CardContent className='flex flex-row items-center justify-around'>
-            <div className='flex flex-row items-center gap-2'>
-              <CustomAvatar color='success' variant='rounded' size={40} skin='light'>
-                <i className='tabler-users' />
+      <Box sx={{ mb: 3 }}>
+        <Card sx={{ maxWidth: '100%', p: 2 }}>
+          <CardContent sx={{
+            padding: 4
+          }}
+            className="flex flex-wrap items-center justify-between gap-4 ">
+            <div className="flex items-center gap-3">
+              <CustomAvatar color="success" variant="rounded" size={40} skin="light">
+                <i className="tabler-users" />
               </CustomAvatar>
-              <div className='flex flex-col items-start'>
-                <Typography variant='h6' className='font-semibold'>Jumlah Anggota</Typography>
-                <Typography variant='body2'>2-4 orang per kelompok</Typography>
+              <div>
+                <Typography variant="h6" className="font-semibold">
+                  Jumlah Anggota
+                </Typography>
+                <Typography variant="body2">2–4 orang per kelompok</Typography>
               </div>
             </div>
-            <div className='flex flex-row items-center gap-2'>
-              <CustomAvatar color='warning' variant='rounded' size={40} skin='light'>
-                <i className='tabler-clock' />
+            <div className="flex items-center gap-3">
+              <CustomAvatar color="warning" variant="rounded" size={40} skin="light">
+                <i className="tabler-clock" />
               </CustomAvatar>
-              <div className='flex flex-col items-start'>
-                <Typography variant='h6' className='font-semibold'>Waktu Pelaksanaan</Typography>
-                <Typography variant='body2'>
-                  Semester Ganjil: Min. semester 7<br />
-                  Semester Genap: Min. semester 8
+              <div>
+                <Typography variant="h6" className="font-semibold">
+                  Waktu Pelaksanaan
+                </Typography>
+                <Typography variant="body2">
+                  Semester Ganjil: mulai semester 7 <br />
+                  Semester Genap: mulai semester 8
                 </Typography>
               </div>
             </div>

@@ -1,11 +1,9 @@
-import { useEffect, useState, useMemo } from 'react'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react'
+
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Chip from '@mui/material/Chip'
-import Checkbox from '@mui/material/Checkbox'
-import IconButton from '@mui/material/IconButton'
 import { styled } from '@mui/material/styles'
 import TablePagination from '@mui/material/TablePagination'
 import MenuItem from '@mui/material/MenuItem'
@@ -13,7 +11,6 @@ import MenuItem from '@mui/material/MenuItem'
 import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   useReactTable,
@@ -27,9 +24,7 @@ import {
 
 import TablePaginationComponent from '@components/TablePaginationComponent'
 import CustomTextField from '@core/components/mui/TextField'
-import CustomAvatar from '@core/components/mui/Avatar'
 import TableFilters from '@/components/TableFilters'
-import { getInitials } from '@/utils/getInitials'
 import tableStyles from '@core/styles/table.module.css'
 
 const Icon = styled('i')({})
@@ -64,7 +59,18 @@ const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...prop
 const DataTable = ({ data, columns, title, globalFilterPlaceholder, addButtonLabel, onAddButtonClick }) => {
   const [rowSelection, setRowSelection] = useState({})
   const [filteredData, setFilteredData] = useState(data)
+
   const [globalFilter, setGlobalFilter] = useState('')
+
+  useEffect(() => {
+    const filtered = data.filter(row => {
+      return Object.values(row).some(value =>
+        String(value).toLowerCase().includes(globalFilter.toLowerCase())
+      );
+    });
+
+    setFilteredData(filtered);
+  }, [globalFilter, data]);
 
   const table = useReactTable({
     data: filteredData,
@@ -78,7 +84,7 @@ const DataTable = ({ data, columns, title, globalFilterPlaceholder, addButtonLab
     },
     initialState: {
       pagination: {
-        pageSize: 10
+        pageSize: 5
       }
     },
     enableRowSelection: true,
@@ -96,26 +102,30 @@ const DataTable = ({ data, columns, title, globalFilterPlaceholder, addButtonLab
 
   return (
     <Card>
-      <CardHeader title={title} className='pbe-4' />
-      <TableFilters setData={setFilteredData} tableData={data} />
+      <CardHeader title='Tabel Persuratan' className='pbe-4' />
+      {/* <TableFilters setData={setFilteredData} tableData={data} /> */}
       <div className='flex flex-col items-start justify-between gap-4 p-6 md:flex-row md:items-center border-bs'>
-        <CustomTextField
-          select
-          value={table.getState().pagination.pageSize}
-          onChange={e => table.setPageSize(Number(e.target.value))}
-          className='max-sm:is-full sm:is-[70px]'
-        >
-          <MenuItem value='10'>10</MenuItem>
-          <MenuItem value='25'>25</MenuItem>
-          <MenuItem value='50'>50</MenuItem>
-        </CustomTextField>
         <div className='flex flex-col items-start gap-4 sm:flex-row max-sm:is-full sm:items-center'>
+          <CustomTextField
+            select
+            value={table.getState().pagination.pageSize}
+            onChange={e => table.setPageSize(Number(e.target.value))}
+            className='max-sm:is-full sm:is-[70px]'
+          >
+            <MenuItem value='5'>5</MenuItem>
+            <MenuItem value='10'>10</MenuItem>
+            <MenuItem value='15'>15</MenuItem>
+            <MenuItem value='25'>25</MenuItem>
+            <MenuItem value='50'>50</MenuItem>
+          </CustomTextField>
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={value => setGlobalFilter(String(value))}
             placeholder={globalFilterPlaceholder}
             className='max-sm:is-full'
           />
+        </div>
+        <div className='flex flex-col items-start gap-4 sm:flex-row max-sm:is-full sm:items-center'>
           <Button
             color='secondary'
             variant='tonal'
