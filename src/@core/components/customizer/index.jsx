@@ -88,7 +88,7 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
   const anchorRef = useRef(null)
 
   // Hooks
-  const theme = useTheme()
+  const theme = useTheme()()
   const pathName = usePathname()
   const { settings, updateSettings, resetSettings, isSettingsChanged } = useSettings()
   const isSystemDark = useMedia('(prefers-color-scheme: dark)', false)
@@ -169,7 +169,7 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
               <i className='tabler-refresh text-textPrimary' />
               <div className={classnames(styles.dotStyles, { [styles.show]: isSettingsChanged })} />
             </div>
-            <i className='tabler-x text-textPrimary cursor-pointer' onClick={handleToggle} />
+            <i className='cursor-pointer tabler-x text-textPrimary' onClick={handleToggle} />
           </div>
         </div>
         <ScrollWrapper
@@ -212,7 +212,7 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
                           : 'var(--mui-palette-primary-contrastText)'
                       }}
                     >
-                      <i className='tabler-color-picker text-xl' />
+                      <i className='text-xl tabler-color-picker' />
                     </div>
                   </div>
                   <Popper
@@ -313,8 +313,8 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
                 </div>
               </div>
               {settings.mode === 'dark' ||
-              (settings.mode === 'system' && isSystemDark) ||
-              settings.layout === 'horizontal' ? null : (
+                (settings.mode === 'system' && isSystemDark) ||
+                settings.layout === 'horizontal' ? null : (
                 <div className='flex items-center justify-between'>
                   <label className='font-medium cursor-pointer' htmlFor='customizer-semi-dark'>
                     Semi Dark

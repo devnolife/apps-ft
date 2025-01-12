@@ -14,6 +14,8 @@ import TablePaginationComponent from '@components/TablePaginationComponent';
 import AddPersyaratan from "./add";
 import useApiGraphql from '@hooks/useApiGraphql';
 
+import CustomAvatar from '@core/components/mui/Avatar'
+
 const role = 'admin'; // Ubah sesuai kebutuhan
 
 const Page = () => {
@@ -29,29 +31,34 @@ const Page = () => {
     setSelectedProdi(event.target.value);
   };
 
-  const query = `
-    query GetAllKkpSyarat {
-      getAllKkpSyarat {
-        id
-        nama
-        is_upload_file
-        is_activated
-        prodi_kode_prodi
+  const accessToken = 'your-access-token'; // Replace with actual access token
+  const { query, mutate, loading } = useApiGraphql(accessToken);
+
+  const fetchRequirements = async () => {
+    const queryStr = `
+      query GetAllKkpSyarat {
+        getAllKkpSyarat {
+          id
+          nama
+          is_upload_file
+          is_activated
+          prodi_kode_prodi
+        }
       }
-    }
-  `;
+    `;
 
-  const { data: fetchedData, error, isLoading } = useApiGraphql(query);
+    try {
+      const response = await query(queryStr);
 
-  useEffect(() => {
-    if (fetchedData) {
-      setData(fetchedData.getAllKkpSyarat);
-    }
-
-    if (error) {
+      setData(response.data.getAllKkpSyarat);
+    } catch (error) {
       toast.error(process.env.NODE_ENV === 'production' ? 'Ada Kesalahan ..' : error.message);
     }
-  }, [fetchedData, error]);
+  };
+
+  useEffect(() => {
+    fetchRequirements();
+  }, []);
 
   const handleAddRequirement = () => {
     setDrawerOpen(true);
@@ -163,7 +170,7 @@ const Page = () => {
     onGlobalFilterChange: setGlobalFilter
   });
 
-  if (isLoading) {
+  if (loading) {
     return <div className='flex items-center justify-center h-screen'>
       <CircularProgress />
     </div>
