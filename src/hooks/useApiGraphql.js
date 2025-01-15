@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-const url = 'https://rps.if.unismuh.ac.id/graphql';
+const url = 'https://superapps.if.unismuh.ac.id/graphql';
 
 let isLoggingOut = false;
 
@@ -15,15 +15,7 @@ const useGraphql = (accessToken) => {
   const [loading, setLoading] = useState(false);
 
   const handleTokenExpiration = (error) => {
-    if (!isLoggingOut) {
-      const isUnauthorized = error.response && error.response.status === 401;
-      const isGraphqlUnauthorized = error.response && error.response.data.errors && error.response.data.errors.some(err => err.extensions.code === 'UNAUTHENTICATED');
-
-      if (isUnauthorized || isGraphqlUnauthorized) {
-        isLoggingOut = true;
-        router.push('/login');
-      }
-    }
+    // Token expiration handling logic removed
   };
 
   const query = async (
@@ -37,10 +29,6 @@ const useGraphql = (accessToken) => {
       const response = await axios.post(url, {
         query,
         variables
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
       });
 
       if (response.data.errors) {
@@ -71,10 +59,6 @@ const useGraphql = (accessToken) => {
       const response = await axios.post(url, {
         query: mutation,
         variables
-      }, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
       });
 
       if (response.data?.errors && response.data.errors.length > 0) {

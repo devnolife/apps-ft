@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
 import { Select, MenuItem, Card, CardContent, Button, Typography, TablePagination } from "@mui/material";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable, getFilteredRowModel, getPaginationRowModel, getSortedRowModel } from '@tanstack/react-table';
 import styles from '@core/styles/table.module.css';
 import classnames from 'classnames';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
+import useApiGraphql from '@hooks/useApiGraphql';
 
 const TablePersyaratan = ({ user }) => {
   const [data, setData] = useState([]);
@@ -43,8 +43,8 @@ const TablePersyaratan = ({ user }) => {
         }
       `;
       try {
-        const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query });
-        setData(response.data.data.getAllKkpSyarat);
+        const response = await useApiGraphql(query);
+        setData(response.data.getAllKkpSyarat);
       } catch (error) {
         console.error(error);
       }
@@ -204,6 +204,3 @@ const TablePersyaratan = ({ user }) => {
 };
 
 export default TablePersyaratan;
-
-
-

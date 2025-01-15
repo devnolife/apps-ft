@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid"
-import axios from "axios"
 import { useState } from "react"
 import { TextField, Button, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material"
+import useApiGraphql from '@hooks/useApiGraphql';
 
 const AddPersyaratan = ({ user }) => {
   const [formData, setFormData] = useState({
@@ -11,11 +11,12 @@ const AddPersyaratan = ({ user }) => {
     url_check: "",
     response_should_be: "",
     is_upload_file: true,
-
     is_activated: true,
     created_by: user
   });
   const [userType, setUserType] = useState(user);
+
+  const { mutate } = useApiGraphql();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,26 +50,27 @@ const AddPersyaratan = ({ user }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const mutation = `
-      mutation CreateKkpSyarat {
-        createKkpSyarat(
-          input: {
-            prodi_kode_prodi: "${formData.prodi_kode_prodi}"
-            nama: "${formData.nama}"
-            logo: "${formData.logo}"
-            url_check: "${formData.url_check}"
-            response_should_be: "${formData.response_should_be}"
-            is_upload_file: ${formData.is_upload_file}
-            is_activated: ${formData.is_activated}
-            created_by: "${formData.created_by}"
-          }
-        ) {
+      mutation CreateKkpSyarat($input: CreateKkpSyaratInput!) {
+        createKkpSyarat(input: $input) {
           id
           nama
         }
       }
     `;
+    const variables = {
+      input: {
+        prodi_kode_prodi: formData.prodi_kode_prodi,
+        nama: formData.nama,
+        logo: formData.logo,
+        url_check: formData.url_check,
+        response_should_be: formData.response_should_be,
+        is_upload_file: formData.is_upload_file,
+        is_activated: formData.is_activated,
+        created_by: formData.created_by
+      }
+    };
     try {
-      const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query: mutation });
+      const response = await mutate(mutation, variables);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -109,4 +111,3 @@ const AddPersyaratan = ({ user }) => {
 }
 
 export default AddPersyaratan
-
