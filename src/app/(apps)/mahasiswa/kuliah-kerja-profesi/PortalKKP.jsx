@@ -21,8 +21,7 @@ import {
   LinearProgress,
   Chip,
   TextField,
-  Box,
-  CardMedia
+  Box
 } from '@mui/material'
 
 import { motion } from 'framer-motion'
@@ -55,6 +54,13 @@ export default function DashboardPage() {
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
 
+  const [newInstansi, setNewInstansi] = useState({
+    nama: '',
+    lokasi: '',
+    keterangan: '',
+    logo: null
+  })
+
   const handleClickOpen = (detail) => {
     setSelectedDetail(detail)
     setOpen(true)
@@ -74,6 +80,23 @@ export default function DashboardPage() {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+
+    setNewInstansi({ ...newInstansi, [name]: value })
+  }
+
+  const handleLogoUpload = (e) => {
+    setNewInstansi({ ...newInstansi, logo: e.target.files[0] })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Handle form submission logic here
+    console.log('New Instansi:', newInstansi)
   }
 
   useEffect(() => {
@@ -225,13 +248,56 @@ export default function DashboardPage() {
           <TimelineKKP />
         </TabPanel>
         <TabPanel value='list-instansi'>
-          <ListInstansiKKP
-            instansiApprovals={instansiApprovals}
-            getRandomColor={getRandomColor}
-          />
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>List Instansi KKP</Typography>
+                  <TableContainer>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Instansi</TableCell>
+                          <TableCell>Alamat</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {instansiApprovals.map((item, idx) => (
+                          <TableRow key={idx}>
+                            <TableCell>{item.kkpInstansi.nama}</TableCell>
+                            <TableCell>{item.kkpInstansi.alamat}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
-          <AjukanInstansi />
+          <Grid container spacing={3}>
+            {[1, 2, 3].map((i) => (
+              <Grid item xs={12} md={4} key={i}>
+                <Paper sx={{ p: 2 }}>
+                  <Grid container alignItems="center" spacing={2}>
+                    <Grid item>
+                      <Grid sx={{ p: 1.5, bgcolor: 'grey.100', borderRadius: 2 }}>
+                        <i className='tabler-building' />
+                      </Grid>
+                    </Grid>
+                    <Grid item>
+                      <Typography variant="subtitle1">PT Teknologi {i}</Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Jakarta Selatan
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                </Paper>
+              </Grid>
+            ))}
+          </Grid>
         </TabPanel>
       </TabContext>
 
