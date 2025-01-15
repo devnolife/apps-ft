@@ -1,5 +1,6 @@
 import { useTheme } from '@mui/material/styles'
 import PerfectScrollbar from 'react-perfect-scrollbar'
+
 import { Menu, MenuItem } from '@menu/vertical-menu'
 import useVerticalNav from '@menu/hooks/useVerticalNav'
 import StyledVerticalNavExpandIcon from '@menu/styles/vertical/StyledVerticalNavExpandIcon'
