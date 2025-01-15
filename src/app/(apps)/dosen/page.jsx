@@ -8,14 +8,17 @@ import Grid from '@mui/material/Grid'
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabPanel from '@mui/lab/TabPanel'
+
 import CustomTabList from '@core/components/mui/TabList'
 
 const ListPersyaratan = dynamic(() => import('@/views/dosen/ListPersyaratan'))
 const ListPaMahasiswa = dynamic(() => import('@/views/dosen/ListMahasiswa'))
 const ListMahasiswaKKP = dynamic(() => import('@/views/dosen/ListMahasiswaKkp'))
 const TableSubmission = dynamic(() => import('@/views/dosen/TableSubmission'))
+
 const TabContent = () => {
   const [activeTab, setActiveTab] = useState('list-mahasiswa')
+
   const handleChange = (event, value) => {
     setActiveTab(value)
   }
@@ -66,7 +69,7 @@ const TabContent = () => {
             </CustomTabList>
           </Grid>
           <Grid item xs={12}>
-            <TabPanel value={activeTab} className='p-0'>
+            <TabPanel value={activeTab} className='p-0' style={{ minHeight: '400px' }}>
               {renderTabContent()}
             </TabPanel>
           </Grid>

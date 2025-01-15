@@ -19,7 +19,9 @@ import {
   TableRow,
   Typography,
   LinearProgress,
-  Chip
+  Chip,
+  TextField,
+  Box
 } from '@mui/material'
 
 
@@ -47,6 +49,13 @@ export default function DashboardPage() {
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
 
+  const [newInstansi, setNewInstansi] = useState({
+    nama: '',
+    lokasi: '',
+    keterangan: '',
+    logo: null
+  })
+
   const handleClickOpen = (detail) => {
     setSelectedDetail(detail)
     setOpen(true)
@@ -66,6 +75,23 @@ export default function DashboardPage() {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+
+    setNewInstansi({ ...newInstansi, [name]: value })
+  }
+
+  const handleLogoUpload = (e) => {
+    setNewInstansi({ ...newInstansi, logo: e.target.files[0] })
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    // Handle form submission logic here
+    console.log('New Instansi:', newInstansi)
   }
 
   useEffect(() => {
@@ -172,19 +198,6 @@ export default function DashboardPage() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={4} justifyContent="flex-end">
-        <Grid item>
-          <Button variant="contained" startIcon={<i className='tabler-plus' />}>
-            Daftar Magang Baru
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button variant="contained" color="primary">
-            Lihat Timeline
-          </Button>
-        </Grid>
-      </Grid>
-
       <TabContext value={activeTab}>
         <TabList onChange={handleTabChange} variant='fullWidth'>
           <Tab icon={<i className='tabler-users' />} label='Persyaratan KKP' value='persyaratan' />
@@ -279,35 +292,79 @@ export default function DashboardPage() {
         </TabPanel>
         <TabPanel value='list-instansi'>
           <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>List Instansi KKP</Typography>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Instansi</TableCell>
-                          <TableCell>Alamat</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {instansiApprovals.map((item, idx) => (
-                          <TableRow key={idx}>
-                            <TableCell>{item.kkpInstansi.nama}</TableCell>
-                            <TableCell>{item.kkpInstansi.alamat}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
-            </Grid>
+            {instansiApprovals.map((item, idx) => (
+              <Grid item xs={12} md={4} key={idx}>
+                <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  <CardContent sx={{ flexGrow: 1 }}>
+                    <Grid container alignItems="center" spacing={2}>
+                      <Grid item>
+                        <CustomAvatar color={getRandomColor()} variant="rounded" size={40} skin="light">
+                          <i className={item.kkpInstansi.logo} />
+                        </CustomAvatar>
+                      </Grid>
+                      <Grid item>
+                        <Typography variant="h6">{item.kkpInstansi.nama}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.kkpInstansi.alama}
+                        </Typography>
+                        <Chip variant='tonal'
+                          label={item.kkpInstansi.is_activated ? 'Terdaftar' : 'Tidak Aktif'} color={item.kkpInstansi.is_activated ? 'success' : 'error'} size="small" />
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
           <Grid container spacing={3}>
+            228            <Grid item xs={12}>
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="h5" gutterBottom>Ajukan Instansi Baru</Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Nama Instansi"
+                    name="nama"
+                    value={newInstansi.nama}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Lokasi"
+                    name="lokasi"
+                    value={newInstansi.lokasi}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Keterangan"
+                    name="keterangan"
+                    value={newInstansi.keterangan}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <Button
+                    variant="contained"
+                    component="label"
+                    sx={{ mb: 2 }}
+                  >
+                    Upload Logo
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleLogoUpload}
+                    />
+                  </Button>
+                  <Button type="submit" variant="contained" color="primary">
+                    Submit
+                  </Button>
+                </Box>
+              </Paper>
+            </Grid>
             {[1, 2, 3].map((i) => (
               <Grid item xs={12} md={4} key={i}>
                 <Paper sx={{ p: 2 }}>
