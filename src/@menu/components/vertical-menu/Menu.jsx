@@ -45,6 +45,7 @@ const Menu = (props, ref) => {
     collapsedMenuSectionLabel = '-',
     popoutMenuOffset = { mainAxis: 0 },
     textTruncate = true,
+    userRole, // New prop for user role
     ...rest
   } = props
 
@@ -142,6 +143,52 @@ const Menu = (props, ref) => {
     ]
   )
 
+  const renderMenuForRole = (role) => {
+    switch (role) {
+      case 'admin':
+        return (
+          <ul className={styles.ul}>
+            {/* Admin specific menu items */}
+            {children}
+          </ul>
+        )
+      case 'lecturer':
+        return (
+          <ul className={styles.ul}>
+            {/* Lecturer specific menu items */}
+            {children}
+          </ul>
+        )
+      case 'dean':
+        return (
+          <ul className={styles.ul}>
+            {/* Dean specific menu items */}
+            {children}
+          </ul>
+        )
+      case 'study_program':
+        return (
+          <ul className={styles.ul}>
+            {/* Study Program specific menu items */}
+            {children}
+          </ul>
+        )
+      case 'lab':
+        return (
+          <ul className={styles.ul}>
+            {/* Lab specific menu items */}
+            {children}
+          </ul>
+        )
+      default:
+        return (
+          <ul className={styles.ul}>
+            {children}
+          </ul>
+        )
+    }
+  }
+
   return (
     <VerticalMenuContext.Provider value={providerValue}>
       <FloatingTree>
@@ -151,7 +198,7 @@ const Menu = (props, ref) => {
           rootStyles={rootStyles}
           {...rest}
         >
-          <ul className={styles.ul}>{children}</ul>
+          {renderMenuForRole(userRole)}
         </StyledVerticalMenu>
       </FloatingTree>
     </VerticalMenuContext.Provider>

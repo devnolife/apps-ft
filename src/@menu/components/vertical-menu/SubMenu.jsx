@@ -63,14 +63,14 @@ const StyledSubMenu = styled.li`
 
   > .${menuClasses.button} {
     ${({ level, disabled, active, children, isCollapsed, isPopoutWhenCollapsed }) =>
-      menuButtonStyles({
-        level,
-        active,
-        disabled,
-        children,
-        isCollapsed,
-        isPopoutWhenCollapsed
-      })};
+    menuButtonStyles({
+      level,
+      active,
+      disabled,
+      children,
+      isCollapsed,
+      isPopoutWhenCollapsed
+    })};
     ${({ buttonStyles }) => buttonStyles};
   }
 `
@@ -94,6 +94,7 @@ const SubMenu = (props, ref) => {
     onOpenChange,
     onClick,
     onKeyUp,
+    userRole, // New prop for user role
     ...rest
   } = props
 
@@ -304,117 +305,588 @@ const SubMenu = (props, ref) => {
     </SubMenuContent>
   )
 
-  return (
-    // eslint-disable-next-line lines-around-comment
-    /* Sub Menu */
-    <StyledSubMenu
-      ref={ref}
-      className={classnames(
-        menuClasses.subMenuRoot,
-        { [menuClasses.active]: active },
-        { [menuClasses.disabled]: disabled },
-        { [menuClasses.open]: isSubMenuOpen },
-        className
-      )}
-      menuItemStyles={getSubMenuItemStyles('root')}
-      level={level}
-      isPopoutWhenCollapsed={isPopoutWhenCollapsed}
-      disabled={disabled}
-      active={active}
-      isCollapsed={isCollapsed}
-      buttonStyles={getSubMenuItemStyles('button')}
-      rootStyles={rootStyles}
-    >
-      {/* Menu Item */}
-      <MenuButton
-        ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
-        onClick={handleOnClick}
-        {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
-        onKeyUp={handleOnKeyUp}
-        title={title}
-        className={classnames(menuClasses.button, { [menuClasses.active]: active })}
-        component={component}
-        tabIndex={disabled ? -1 : 0}
-        {...rest}
-      >
-        {/* Sub Menu Icon */}
-        {renderMenuIcon({
-          icon,
-          level,
-          active,
-          disabled,
-          renderExpandedMenuItemIcon,
-          styles: getSubMenuItemStyles('icon'),
-          isBreakpointReached
-        })}
-
-        {/* Sub Menu Prefix */}
-        {prefix && (
-          <StyledMenuPrefix
-            isHovered={isHovered}
-            isCollapsed={isCollapsed}
-            firstLevel={level === 0}
-            className={menuClasses.prefix}
-            rootStyles={getSubMenuItemStyles('prefix')}
-          >
-            {prefix}
-          </StyledMenuPrefix>
-        )}
-
-        {/* Sub Menu Label */}
-        <StyledMenuLabel
-          className={menuClasses.label}
-          rootStyles={getSubMenuItemStyles('label')}
-          textTruncate={textTruncate}
-        >
-          {label}
-        </StyledMenuLabel>
-
-        {/* Sub Menu Suffix */}
-        {suffix && (
-          <StyledMenuSuffix
-            isHovered={isHovered}
-            isCollapsed={isCollapsed}
-            firstLevel={level === 0}
-            className={menuClasses.suffix}
-            rootStyles={getSubMenuItemStyles('suffix')}
-          >
-            {suffix}
-          </StyledMenuSuffix>
-        )}
-
-        {/* Sub Menu Toggle Icon Wrapper */}
-        {isCollapsed && !isHovered && level === 0 ? null : (
-          <StyledVerticalNavExpandIconWrapper
-            className={menuClasses.subMenuExpandIcon}
-            rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
-          >
-            {renderExpandIcon ? (
-              renderExpandIcon({
-                level,
-                disabled,
-                active,
-                open: isSubMenuOpen
-              })
-            ) : (
-              // eslint-disable-next-line lines-around-comment
-              /* Expanded Arrow Icon */
-              <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
-                <ChevronRight fontSize='1rem' />
-              </StyledVerticalNavExpandIcon>
+  const renderSubMenuForRole = (role) => {
+    switch (role) {
+      case 'admin':
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
             )}
-          </StyledVerticalNavExpandIconWrapper>
-        )}
-      </MenuButton>
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+      case 'lecturer':
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
+            )}
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+      case 'dean':
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
+            )}
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+      case 'study_program':
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
+            )}
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+      case 'lab':
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
+            )}
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+      default:
+        return (
+          <StyledSubMenu
+            ref={ref}
+            className={classnames(
+              menuClasses.subMenuRoot,
+              { [menuClasses.active]: active },
+              { [menuClasses.disabled]: disabled },
+              { [menuClasses.open]: isSubMenuOpen },
+              className
+            )}
+            menuItemStyles={getSubMenuItemStyles('root')}
+            level={level}
+            isPopoutWhenCollapsed={isPopoutWhenCollapsed}
+            disabled={disabled}
+            active={active}
+            isCollapsed={isCollapsed}
+            buttonStyles={getSubMenuItemStyles('button')}
+            rootStyles={rootStyles}
+          >
+            <MenuButton
+              ref={isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled ? refs.setReference : null}
+              onClick={handleOnClick}
+              {...(isCollapsed && level === 0 && isPopoutWhenCollapsed && !disabled && getReferenceProps())}
+              onKeyUp={handleOnKeyUp}
+              title={title}
+              className={classnames(menuClasses.button, { [menuClasses.active]: active })}
+              component={component}
+              tabIndex={disabled ? -1 : 0}
+              {...rest}
+            >
+              {renderMenuIcon({
+                icon,
+                level,
+                active,
+                disabled,
+                renderExpandedMenuItemIcon,
+                styles: getSubMenuItemStyles('icon'),
+                isBreakpointReached
+              })}
+              {prefix && (
+                <StyledMenuPrefix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.prefix}
+                  rootStyles={getSubMenuItemStyles('prefix')}
+                >
+                  {prefix}
+                </StyledMenuPrefix>
+              )}
+              <StyledMenuLabel
+                className={menuClasses.label}
+                rootStyles={getSubMenuItemStyles('label')}
+                textTruncate={textTruncate}
+              >
+                {label}
+              </StyledMenuLabel>
+              {suffix && (
+                <StyledMenuSuffix
+                  isHovered={isHovered}
+                  isCollapsed={isCollapsed}
+                  firstLevel={level === 0}
+                  className={menuClasses.suffix}
+                  rootStyles={getSubMenuItemStyles('suffix')}
+                >
+                  {suffix}
+                </StyledMenuSuffix>
+              )}
+              {isCollapsed && !isHovered && level === 0 ? null : (
+                <StyledVerticalNavExpandIconWrapper
+                  className={menuClasses.subMenuExpandIcon}
+                  rootStyles={getSubMenuItemStyles('subMenuExpandIcon')}
+                >
+                  {renderExpandIcon ? (
+                    renderExpandIcon({
+                      level,
+                      disabled,
+                      active,
+                      open: isSubMenuOpen
+                    })
+                  ) : (
+                    <StyledVerticalNavExpandIcon open={isSubMenuOpen} transitionDuration={transitionDuration}>
+                      <ChevronRight fontSize='1rem' />
+                    </StyledVerticalNavExpandIcon>
+                  )}
+                </StyledVerticalNavExpandIconWrapper>
+              )}
+            </MenuButton>
+            {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
+              <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
+            ) : (
+              submenuContent
+            )}
+          </StyledSubMenu>
+        )
+    }
+  }
 
-      {/* Sub Menu Content */}
-      {isCollapsed && level === 0 && isPopoutWhenCollapsed ? (
-        <FloatingPortal>{openWhenCollapsed && submenuContent}</FloatingPortal>
-      ) : (
-        submenuContent
-      )}
-    </StyledSubMenu>
-  )
+  return renderSubMenuForRole(userRole)
 }
 
 export default forwardRef(SubMenu)

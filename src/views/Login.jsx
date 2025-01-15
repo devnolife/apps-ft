@@ -1,7 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { styled, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
@@ -10,6 +12,9 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 
 import classnames from 'classnames'
+
+import { signIn } from 'next-auth/react'
+
 import Link from '@components/Link'
 import Logo from '@components/layout/shared/Logo'
 import CustomTextField from '@core/components/mui/TextField'
@@ -17,7 +22,6 @@ import themeConfig from '@configs/themeConfig'
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 
-import { signIn } from 'next-auth/react'
 
 const LoginIllustration = styled('img')(({ theme }) => ({
   zIndex: 2,
@@ -39,6 +43,7 @@ const Login = ({ mode }) => {
   const [isLoading, setIsLoading] = useState(false)
   const [usernameError, setUsernameError] = useState('')
   const [passwordError, setPasswordError] = useState('')
+  const [userRole, setUserRole] = useState('')
 
   const darkIllustration = '/images/illustrations/auth/v2-login-dark.png'
   const lightIllustration = '/images/illustrations/auth/auth-2.png'
@@ -58,31 +63,42 @@ const Login = ({ mode }) => {
 
   const handleClickShowPassword = () => setIsPasswordShown(show => !show)
 
+  const handleRoleClick = (role) => {
+    setUserRole(role)
+  }
+
   const handleSubmit = async (e) => {
 
     e.preventDefault()
     let hasError = false
+
     if (!username) {
       setUsernameError('Username wajib diisi')
       hasError = true
     } else {
       setUsernameError('')
     }
+
     if (!password) {
       setPasswordError('Password wajib diisi')
       hasError = true
     } else {
       setPasswordError('')
     }
+
     if (hasError) return
 
     setIsLoading(true)
+
     const result = await signIn('credentials', {
       redirect: false,
       username: username,
-      password: password
+      password: password,
+      role: userRole
     })
+
     setIsLoading(false)
+
     if (result.ok) {
       router.push('/dashboard')
     } else {
@@ -149,6 +165,13 @@ const Login = ({ mode }) => {
               <Typography className='text-end' color='primary' component={Link}>
                 Lupa Kata Sandi
               </Typography>
+            </div>
+            <div className='flex flex-wrap items-center justify-between gap-x-3 gap-y-1'>
+              <Button variant='outlined' onClick={() => handleRoleClick('admin')}>Admin</Button>
+              <Button variant='outlined' onClick={() => handleRoleClick('lecturer')}>Lecturer</Button>
+              <Button variant='outlined' onClick={() => handleRoleClick('dean')}>Dean</Button>
+              <Button variant='outlined' onClick={() => handleRoleClick('study_program')}>Study Program</Button>
+              <Button variant='outlined' onClick={() => handleRoleClick('lab')}>Lab</Button>
             </div>
             <Button fullWidth variant='contained' type='submit' disabled={isLoading}>
               Login

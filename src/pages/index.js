@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
+
 import { useRouter } from 'next/router';
+
 import themeConfig from '../configs/themeConfig';
 
 const Index = () => {
