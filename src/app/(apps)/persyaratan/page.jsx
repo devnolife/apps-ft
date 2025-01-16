@@ -12,7 +12,6 @@ import styles from '@core/styles/table.module.css';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
 import AddPersyaratan from "./add";
-import useApiGraphql from '@hooks/useApiGraphql';
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -31,8 +30,7 @@ const Page = () => {
     setSelectedProdi(event.target.value);
   };
 
-  const accessToken = 'your-access-token'; // Replace with actual access token
-  const { query, mutate, loading } = useApiGraphql(accessToken);
+  const { query, loading } = useApiGraphql();
 
   const fetchRequirements = async () => {
     const queryStr = `

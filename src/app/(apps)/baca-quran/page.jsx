@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 
+import { motion } from 'framer-motion'
 import { Card, CardContent, CardHeader, Button, Table, TableBody, TableCell, TableHead, TableRow, TableContainer, Paper, Input, Typography } from '@mui/material'
 
 
@@ -47,7 +48,7 @@ export default function AdminDashboard() {
   const totalSelesai = mahasiswa.filter(m => m.status === 'Selesai').length
 
   return (
-    <div className="p-6 space-y-6">
+    <motion.div className="p-6 space-y-6" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard Admin</h1>
@@ -72,9 +73,9 @@ export default function AdminDashboard() {
             <i classname='tabler-tabler-credit-card' />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <motion.div className="text-2xl font-bold" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
               Rp {totalPendapatan.toLocaleString('id-ID')}
-            </div>
+            </motion.div>
             <p className="text-xs text-gray-500">
               +20.1% dari bulan lalu
             </p>
@@ -82,9 +83,12 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <Typography variant="h6" className="text-sm font-medium">Total Mahasiswa</Typography>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalMahasiswa}</div>
+            <motion.div className="text-2xl font-bold" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
+              {totalMahasiswa}
+            </motion.div>
             <p className="text-xs text-gray-500">
               {totalMahasiswa} mahasiswa terdaftar
             </p>
@@ -92,9 +96,12 @@ export default function AdminDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
+            <Typography variant="h6" className="text-sm font-medium">Total Selesai</Typography>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{totalSelesai}</div>
+            <motion.div className="text-2xl font-bold" initial={{ scale: 0.8 }} animate={{ scale: 1 }} transition={{ duration: 0.5 }}>
+              {totalSelesai}
+            </motion.div>
             <p className="text-xs text-gray-500">
               {totalSelesai} mahasiswa telah selesai
             </p>
@@ -174,6 +181,6 @@ export default function AdminDashboard() {
           </TableContainer>
         </CardContent>
       </Card>
-    </div >
+    </motion.div >
   )
 }

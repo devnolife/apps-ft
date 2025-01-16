@@ -108,7 +108,7 @@ const TimelineCenter = () => {
 
 
   return (
-    <Box sx={{ width: '100%', maxHeight: "100%", overflowY: 'auto' }}>
+    <Box sx={{ width: '100%', maxHeight: '100%', overflow: 'hidden' }}>
       <Timeline position={isBelowMdScreen ? 'right' : 'alternate'}>
         {Data.map((item, index) => (
           <TimelineItem key={index} style={{ '--animation-index': index }}>
