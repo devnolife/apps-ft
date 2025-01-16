@@ -113,59 +113,54 @@ const TimelineKKP = () => {
   const isBelowMdScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   return (
-    <Card>
-      <CardContent>
-        <Typography variant="h5" gutterBottom>Timeline KKP</Typography>
-        <Box sx={{ width: '100%', maxHeight: '100%', overflow: 'hidden' }}>
-          <Timeline position={isBelowMdScreen ? 'right' : 'alternate'}>
-            {Data.map((item, index) => (
-              <TimelineItem key={index} style={{ '--animation-index': index }}>
-                {!isBelowMdScreen && (
-                  <TimelineOppositeContent>
-                    <Typography variant='caption' component='div' className='mbs-5'>
-                      {item.week}
-                    </Typography>
-                  </TimelineOppositeContent>
-                )}
-                <TimelineSeparator>
-                  <TimelineDot color='primary' variant='tonal'>
-                    <i className={`text-lg ${item.icon}`} />
-                  </TimelineDot>
-                  <TimelineConnector />
-                </TimelineSeparator>
-                <TimelineContent>
-                  {isBelowMdScreen && (
-                    <Typography variant='caption' component='div' className='mbs-5'>
-                      {item.week}
-                    </Typography>
-                  )}
-                  <Fade in={true} timeout={500}>
-                    <HoverCard>
-                      <CardContent>
-                        <Box
-                          sx={{
-                            padding: 1.5,
-                            borderRadius: 1
-                          }}
-                        >
-                          <Typography variant='h5' className='mbe-1'>
-                            {item.header}
-                          </Typography>
-                          <Typography variant='body1' className='mbe-2 indented-title'>
-                            {item.title}
-                          </Typography>
-                          <Chip label={item.waktu} color={item.chipColor} size="small" />
-                        </Box>
-                      </CardContent>
-                    </HoverCard>
-                  </Fade>
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
-        </Box>
-      </CardContent>
-    </Card>
+    <Box sx={{ width: '100%', maxHeight: '100%', overflow: 'hidden' }}>
+      <Timeline position={isBelowMdScreen ? 'right' : 'alternate'}>
+        {Data.map((item, index) => (
+          <TimelineItem key={index} style={{ '--animation-index': index }}>
+            {!isBelowMdScreen && (
+              <TimelineOppositeContent>
+                <Typography variant='caption' component='div' className='mbs-5'>
+                  {item.week}
+                </Typography>
+              </TimelineOppositeContent>
+            )}
+            <TimelineSeparator>
+              <TimelineDot color='primary' variant='tonal'>
+                <i className={`text-lg ${item.icon}`} />
+              </TimelineDot>
+              <TimelineConnector />
+            </TimelineSeparator>
+            <TimelineContent>
+              {isBelowMdScreen && (
+                <Typography variant='caption' component='div' className='mbs-5'>
+                  {item.week}
+                </Typography>
+              )}
+              <Fade in={true} timeout={500}>
+                <HoverCard>
+                  <CardContent>
+                    <Box
+                      sx={{
+                        padding: 1.5,
+                        borderRadius: 1
+                      }}
+                    >
+                      <Typography variant='h5' className='mbe-1'>
+                        {item.header}
+                      </Typography>
+                      <Typography variant='body1' className='mbe-2 indented-title'>
+                        {item.title}
+                      </Typography>
+                      <Chip label={item.waktu} color={item.chipColor} size="small" />
+                    </Box>
+                  </CardContent>
+                </HoverCard>
+              </Fade>
+            </TimelineContent>
+          </TimelineItem>
+        ))}
+      </Timeline>
+    </Box>
   )
 }
 
