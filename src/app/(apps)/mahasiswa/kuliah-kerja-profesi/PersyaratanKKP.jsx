@@ -1,28 +1,19 @@
-import React, { useState, useEffect } from 'react'
 
 import {
   Card, CardContent, Typography, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Button, Grid, Chip, Box, CircularProgress
+  TableHead, TableRow, Button, Grid, Chip
 } from '@mui/material'
-
-import { motion } from 'framer-motion'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
 export default function PersyaratanKKP({ persyaratan, handleClickOpen, getRandomColor }) {
   return (
-    <Card
-      component={motion.div}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      sx={{ overflow: 'hidden', maxHeight: '100%' }} // Add this line to hide scrollbar
-    >
-      <CardContent sx={{ overflow: 'hidden' }}> {/* Add overflow: hidden here */}
+    <Card>
+      <CardContent>
         <Typography variant="h5" gutterBottom>
           Persyaratan Kuliah Kerja Profesi
         </Typography>
-        <TableContainer sx={{ overflow: 'hidden' }}> {/* Add overflow: hidden here */}
+        <TableContainer>
           <Table>
             <TableHead>
               <TableRow>
@@ -35,13 +26,7 @@ export default function PersyaratanKKP({ persyaratan, handleClickOpen, getRandom
             </TableHead>
             <TableBody>
               {persyaratan.map((item, index) => (
-                <TableRow
-                  key={item.id}
-                  component={motion.tr}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
+                <TableRow key={item.id}>
                   <TableCell sx={{ fontSize: '1rem' }}>{index + 1}</TableCell>
                   <TableCell sx={{ fontSize: '1rem' }}>
                     <Grid container alignItems="center" spacing={1}>

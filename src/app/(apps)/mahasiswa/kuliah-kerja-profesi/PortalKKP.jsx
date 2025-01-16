@@ -21,7 +21,8 @@ import {
   LinearProgress,
   Chip,
   TextField,
-  Box
+  Box,
+  CardMedia
 } from '@mui/material'
 
 import { motion } from 'framer-motion'
@@ -33,6 +34,11 @@ import TabPanel from '@mui/lab/TabPanel'
 
 import DetailPersyaratan from './DetailPersyaratan'
 import CustomAvatar from '@core/components/mui/Avatar'
+
+import PersyaratanKKP from './PersyaratanKKP'
+import TimelineKKP from './TimelineKKP'
+import ListInstansiKKP from './ListInstansiKKP'
+import AjukanInstansi from './AjukanInstansi'
 
 import PersyaratanKKP from './PersyaratanKKP'
 import TimelineKKP from './TimelineKKP'
@@ -157,37 +163,16 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{ py: 4 }}
-      component={motion.div}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <Grid container spacing={4} alignItems="center">
-        <Grid item xs={12} md={6}>
+    <Container maxWidth="lg" sx={{ py: 4 }}>
+      {/* Header Section */}
+      <Grid container spacing={4}>
+        <Grid item xs={12}>
           <Typography variant="h4" component="h1" gutterBottom>
             Kuliah Kerja Profesi & Plus
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" paragraph>
             Panduan dan informasi terkait kuliah kerja profesi dan kuliah kerja profesi plus
           </Typography>
-        </Grid>
-
-        <Grid item xs={12} md={6}>
-          <Card
-            component={motion.div}
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            sx={{
-              maxWidth: "100%",
-              boxShadow: 3,
-              borderRadius: 2,
-            }}
-          >
-          </Card>
         </Grid>
       </Grid>
       <Grid container spacing={3}>
@@ -238,34 +223,68 @@ export default function DashboardPage() {
           <Tab icon={<i className='tabler-plus' />} label='Ajukan Instansi Baru' value='ajukan-instansi' />
         </TabList>
         <TabPanel value='persyaratan'>
-          <PersyaratanKKP
-            persyaratan={persyaratan}
-            handleClickOpen={handleClickOpen}
-            getRandomColor={getRandomColor}
-          />
-        </TabPanel>
-        <TabPanel value='timeline'>
-          <TimelineKKP />
-        </TabPanel>
-        <TabPanel value='list-instansi'>
           <Grid container spacing={4}>
             <Grid item xs={12}>
               <Card>
                 <CardContent>
-                  <Typography variant="h5" gutterBottom>List Instansi KKP</Typography>
+                  <Typography variant="h5" gutterBottom>
+                    Persyaratan Kuliah Kerja Profesi
+                  </Typography>
                   <TableContainer>
                     <Table>
                       <TableHead>
                         <TableRow>
-                          <TableCell>Instansi</TableCell>
-                          <TableCell>Alamat</TableCell>
+                          <TableCell sx={{ fontSize: '1rem' }}>No</TableCell>
+                          <TableCell sx={{ fontSize: '1rem' }}>Persyaratan</TableCell>
+                          <TableCell sx={{ fontSize: '1rem' }}>Upload File</TableCell>
+                          <TableCell sx={{ fontSize: '1rem' }}>Aktif</TableCell>
+                          <TableCell sx={{ fontSize: '1rem' }}>Detail</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {instansiApprovals.map((item, idx) => (
-                          <TableRow key={idx}>
-                            <TableCell>{item.kkpInstansi.nama}</TableCell>
-                            <TableCell>{item.kkpInstansi.alamat}</TableCell>
+                        {persyaratan.map((item, index) => (
+                          <TableRow key={item.id}>
+                            <TableCell sx={{ fontSize: '1rem' }}>{index + 1}</TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>
+                              <Grid container alignItems="center" spacing={1}>
+                                <Grid item>
+                                  <CustomAvatar color={getRandomColor()} variant="rounded" size={24} skin="light">
+                                    <i className={item.logo} />
+                                  </CustomAvatar>
+                                </Grid>
+                                <Grid item color={getRandomColor()}>
+                                  <Typography variant="body1">{item.nama}</Typography>
+                                </Grid>
+                              </Grid>
+                            </TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>
+                              <Chip
+                                icon={<CustomAvatar color={item.file === 'Iya' ? 'success' : 'error'} variant="rounded" size={24} skin="light">
+                                  <i className={item.file === 'Iya' ? 'tabler-file-check' : 'tabler-file-x'} />
+                                </CustomAvatar>}
+                                variant="tonal"
+                                label={item.file}
+                                color={item.file === 'Iya' ? 'success' : 'error'}
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>
+                              <Chip
+                                icon={<CustomAvatar color={item.aktif === 'Aktif' ? 'success' : 'error'} variant="rounded" size={24} skin="light">
+                                  <i className={item.aktif === 'Aktif' ? 'tabler-check' : 'tabler-x'} />
+                                </CustomAvatar>}
+                                variant="tonal"
+                                label={item.aktif}
+                                color={item.aktif === 'Aktif' ? 'success' : 'error'}
+                                size="small"
+                              />
+                            </TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>
+                              <Button size='small'
+                                variant="contained" startIcon={<i className="tabler-info-circle" />} onClick={() => handleClickOpen(item)}>
+                                Detail
+                              </Button>
+                            </TableCell>
                           </TableRow>
                         ))}
                       </TableBody>
@@ -276,8 +295,128 @@ export default function DashboardPage() {
             </Grid>
           </Grid>
         </TabPanel>
+        <TabPanel value='timeline'>
+          <Grid container spacing={4}>
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>Timeline KKP</Typography>
+                  <TimelineCenter />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </TabPanel>
+        <TabPanel value='list-instansi'>
+          <Grid container spacing={4}>
+            {instansiApprovals.map((item, idx) => (
+              <Grid item xs={12} sm={6} md={4} key={idx}>
+                <Card
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    overflow: 'hidden',
+                    transition: 'transform 0.2s',
+                    '&:hover': { transform: 'scale(1.02)' },
+                  }}
+                >
+                  <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                    <Grid
+                      container
+                      spacing={2}
+                      direction="column"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Grid item>
+                        <CustomAvatar
+                          color={getRandomColor()}
+                          variant="rounded"
+                          size={90}
+                          skin="light"
+                          sx={{ mb: 2 }}
+                        >
+                          <i className={item.kkpInstansi.logo} />
+                        </CustomAvatar>
+                      </Grid>
+                      <Grid item>
+                        <Chip
+                          variant="outlined"
+                          label={item.kkpInstansi.is_activated ? 'Terdaftar' : 'Tidak Aktif'}
+                          color={item.kkpInstansi.is_activated ? 'success' : 'error'}
+                          size="small"
+                          sx={{ mb: 1 }}
+                        />
+                      </Grid>
+                      <Grid item textAlign="center">
+                        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                          {item.kkpInstansi.nama}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                          {item.kkpInstansi.alamat}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {item.kkpInstansi.keterangan}
+                        </Typography>
+                      </Grid>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </TabPanel>
         <TabPanel value='ajukan-instansi'>
           <Grid container spacing={3}>
+            228            <Grid item xs={12}>
+              <Paper sx={{ p: 2 }}>
+                <Typography variant="h5" gutterBottom>Ajukan Instansi Baru</Typography>
+                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+                  <TextField
+                    fullWidth
+                    label="Nama Instansi"
+                    name="nama"
+                    value={newInstansi.nama}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Lokasi"
+                    name="lokasi"
+                    value={newInstansi.lokasi}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <TextField
+                    fullWidth
+                    label="Keterangan"
+                    name="keterangan"
+                    value={newInstansi.keterangan}
+                    onChange={handleInputChange}
+                    sx={{ mb: 2 }}
+                  />
+                  <Button
+                    variant="contained"
+                    component="label"
+                    sx={{ mb: 2 }}
+                  >
+                    Upload Logo
+                    <input
+                      type="file"
+                      hidden
+                      onChange={handleLogoUpload}
+                    />
+                  </Button>
+                  <Button type="submit" variant="contained" color="primary">
+                    Submit
+                  </Button>
+                </Box>
+              </Paper>
+            </Grid>
             {[1, 2, 3].map((i) => (
               <Grid item xs={12} md={4} key={i}>
                 <Paper sx={{ p: 2 }}>

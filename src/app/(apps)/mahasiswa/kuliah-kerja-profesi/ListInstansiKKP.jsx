@@ -1,5 +1,5 @@
+
 import { Grid, Card, CardContent, Chip, Typography } from '@mui/material'
-import { motion } from 'framer-motion'
 
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -7,20 +7,8 @@ export default function ListInstansiKKP({ instansiApprovals, getRandomColor }) {
   return (
     <Grid container spacing={4}>
       {instansiApprovals.map((item, idx) => (
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          md={4}
-          key={idx}
-          component={motion.div}
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: idx * 0.1 }}
-        >
+        <Grid item xs={12} sm={6} md={4} key={idx}>
           <Card
-            component={motion.div}
-            whileHover={{ scale: 1.05 }}
             sx={{
               height: '100%', display: 'flex', flexDirection: 'column',
               boxShadow: 3, borderRadius: 2, overflow: 'hidden',
