@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { toast } from 'react-toastify'
+import CircularProgress from '@mui/material/CircularProgress'
 
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -141,9 +143,28 @@ const Stepper = styled(MuiStepper)(({ theme }) => ({
 
 const Pendaftaran = () => {
   const [activeStep, setActiveStep] = useState(0)
+  const [loading, setLoading] = useState(false)
+
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        // Simulate data fetching
+        await new Promise(resolve => setTimeout(resolve, 2000))
+      } catch (error) {
+        toast.error('Failed to fetch data')
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
 
   return (
     <Card>
@@ -166,7 +187,15 @@ const Pendaftaran = () => {
         </StepperWrapper>
       </CardContent>
       <Divider />
-      <CardContent>{getStepContent(activeStep, handleNext)}</CardContent>
+      <CardContent>
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <CircularProgress />
+          </div>
+        ) : (
+          getStepContent(activeStep, handleNext)
+        )}
+      </CardContent>
     </Card>
   )
 }
