@@ -26,7 +26,6 @@ import {
 } from '@mui/material'
 
 import { motion } from 'framer-motion'
-import { motion } from 'framer-motion'
 
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
@@ -35,11 +34,6 @@ import TabPanel from '@mui/lab/TabPanel'
 
 import DetailPersyaratan from './DetailPersyaratan'
 import CustomAvatar from '@core/components/mui/Avatar'
-
-import PersyaratanKKP from './PersyaratanKKP'
-import TimelineKKP from './TimelineKKP'
-import ListInstansiKKP from './ListInstansiKKP'
-import AjukanInstansi from './AjukanInstansi'
 
 import PersyaratanKKP from './PersyaratanKKP'
 import TimelineKKP from './TimelineKKP'
@@ -61,6 +55,13 @@ export default function DashboardPage() {
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
 
+  const [newInstansi, setNewInstansi] = useState({
+    nama: '',
+    alamat: '',
+    keterangan: '',
+    logo: ''
+  })
+
   const handleClickOpen = (detail) => {
     setSelectedDetail(detail)
     setOpen(true)
@@ -80,6 +81,20 @@ export default function DashboardPage() {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
+  }
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+
+    setNewInstansi(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleLogoUpload = (file) => {
+    // Implement file handling logic
+  }
+
+  const handleSubmit = () => {
+    // Implement submission logic
   }
 
   useEffect(() => {
@@ -288,7 +303,7 @@ export default function DashboardPage() {
               <Card>
                 <CardContent>
                   <Typography variant="h5" gutterBottom>Timeline KKP</Typography>
-                  <TimelineCenter />
+                  <TimelineKKP />
                 </CardContent>
               </Card>
             </Grid>
