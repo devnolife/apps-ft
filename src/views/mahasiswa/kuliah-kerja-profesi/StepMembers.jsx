@@ -3,6 +3,7 @@ import { Grid, Typography, Paper, Avatar, InputAdornment, Button, Box, IconButto
 import CustomTextField from '@/@core/components/mui/TextField';
 import useApiGraphql from '@/hooks/useApiGraphql';
 import { formatName } from '@/utils';
+import { GET_MAHASISWA } from 'src/graphql/queries';
 
 const StepAnggota = ({ handleNext }) => {
   const [nim, setNim] = useState('');
@@ -35,19 +36,9 @@ const StepAnggota = ({ handleNext }) => {
     setErrors({});
   };
 
-  const query = `
-    query Mahasiswa($nim: String!) {
-      mahasiswa(nim: $nim) {
-        nim
-        kodeProdi
-        nama
-      }
-    }
-  `;
-
   const { data, error } = useApiGraphql(
     searchInitiated ? 'https://sicekcok.if.unismuh.ac.id/graphql' : null,
-    query,
+    GET_MAHASISWA,
     searchInitiated ? { nim } : null
   );
 

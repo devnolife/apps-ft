@@ -13,6 +13,7 @@ import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
 import AddPersyaratan from "./add";
 import useApiGraphql from '@hooks/useApiGraphql';
+import { GET_ALL_KKP_SYARAT } from 'src/graphql/queries';
 
 const role = 'admin'; // Ubah sesuai kebutuhan
 
@@ -29,17 +30,7 @@ const Page = () => {
     setSelectedProdi(event.target.value);
   };
 
-  const query = `
-    query GetAllKkpSyarat {
-      getAllKkpSyarat {
-        id
-        nama
-        is_upload_file
-        is_activated
-        prodi_kode_prodi
-      }
-    }
-  `;
+  const query = GET_ALL_KKP_SYARAT;
 
   const { data: fetchedData, error, isLoading } = useApiGraphql(query);
 

@@ -1,57 +1,23 @@
 import React, { useEffect, useState, useMemo } from "react";
-import axios from "axios";
+import { useDispatch, useSelector } from 'react-redux';
 import { Select, MenuItem, Card, CardContent, Button, Typography, TablePagination } from "@mui/material";
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable, getFilteredRowModel, getPaginationRowModel, getSortedRowModel } from '@tanstack/react-table';
 import styles from '@core/styles/table.module.css';
 import classnames from 'classnames';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
+import { GET_ALL_KKP_SYARAT } from 'src/graphql/queries';
+import { fetchPersyaratan } from 'src/store/slices/persyaratanSlice';
 
 const TablePersyaratan = ({ user }) => {
-  const [data, setData] = useState([]);
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.persyaratan.data);
   const [userType, setUserType] = useState(user);
   const [globalFilter, setGlobalFilter] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      const query = userType === 'admin' ? `
-        query GetAllKkpSyarat {
-          getAllKkpSyarat {
-            id
-            prodi_kode_prodi
-            nama
-            url_check
-            response_should_be
-            is_upload_file
-            is_activated
-            is_deleted
-            created_by
-            updated_by
-            created_at
-            updated_at
-          }
-        }
-      ` : `
-        query GetAllKkpSyarat {
-          getAllKkpSyarat {
-            id
-            nama
-            logo
-            is_upload_file
-            is_activated
-          }
-        }
-      `;
-      try {
-        const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query });
-        setData(response.data.data.getAllKkpSyarat);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, [userType]);
+    dispatch(fetchPersyaratan(userType));
+  }, [userType, dispatch]);
 
   const handleUserTypeChange = (e) => {
     setUserType(e.target.value);
@@ -204,6 +170,3 @@ const TablePersyaratan = ({ user }) => {
 };
 
 export default TablePersyaratan;
-
-
-
