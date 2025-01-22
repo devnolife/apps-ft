@@ -26,6 +26,7 @@ import {
 } from '@mui/material'
 
 import { motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
@@ -60,13 +61,6 @@ export default function DashboardPage() {
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
 
-  const [newInstansi, setNewInstansi] = useState({
-    nama: '',
-    lokasi: '',
-    keterangan: '',
-    logo: null
-  })
-
   const handleClickOpen = (detail) => {
     setSelectedDetail(detail)
     setOpen(true)
@@ -86,23 +80,6 @@ export default function DashboardPage() {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-
-    setNewInstansi({ ...newInstansi, [name]: value })
-  }
-
-  const handleLogoUpload = (e) => {
-    setNewInstansi({ ...newInstansi, logo: e.target.files[0] })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    // Handle form submission logic here
-    console.log('New Instansi:', newInstansi)
   }
 
   useEffect(() => {
@@ -164,15 +141,25 @@ export default function DashboardPage() {
 
   return (
     <Container maxWidth="lg" sx={{ py: 4 }}>
-      {/* Header Section */}
-      <Grid container spacing={4}>
-        <Grid item xs={12}>
+      <Grid container spacing={4} alignItems="center">
+        <Grid item xs={12} md={6}>
           <Typography variant="h4" component="h1" gutterBottom>
             Kuliah Kerja Profesi & Plus
           </Typography>
           <Typography variant="subtitle1" color="text.secondary" paragraph>
             Panduan dan informasi terkait kuliah kerja profesi dan kuliah kerja profesi plus
           </Typography>
+        </Grid>
+
+        <Grid item xs={12} md={6}>
+          <Card
+            sx={{
+              maxWidth: "100%",
+              boxShadow: 3,
+              borderRadius: 2,
+            }}
+          >
+          </Card>
         </Grid>
       </Grid>
       <Grid container spacing={3}>
@@ -370,73 +357,12 @@ export default function DashboardPage() {
           </Grid>
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
-          <Grid container spacing={3}>
-            228            <Grid item xs={12}>
-              <Paper sx={{ p: 2 }}>
-                <Typography variant="h5" gutterBottom>Ajukan Instansi Baru</Typography>
-                <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
-                  <TextField
-                    fullWidth
-                    label="Nama Instansi"
-                    name="nama"
-                    value={newInstansi.nama}
-                    onChange={handleInputChange}
-                    sx={{ mb: 2 }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Lokasi"
-                    name="lokasi"
-                    value={newInstansi.lokasi}
-                    onChange={handleInputChange}
-                    sx={{ mb: 2 }}
-                  />
-                  <TextField
-                    fullWidth
-                    label="Keterangan"
-                    name="keterangan"
-                    value={newInstansi.keterangan}
-                    onChange={handleInputChange}
-                    sx={{ mb: 2 }}
-                  />
-                  <Button
-                    variant="contained"
-                    component="label"
-                    sx={{ mb: 2 }}
-                  >
-                    Upload Logo
-                    <input
-                      type="file"
-                      hidden
-                      onChange={handleLogoUpload}
-                    />
-                  </Button>
-                  <Button type="submit" variant="contained" color="primary">
-                    Submit
-                  </Button>
-                </Box>
-              </Paper>
-            </Grid>
-            {[1, 2, 3].map((i) => (
-              <Grid item xs={12} md={4} key={i}>
-                <Paper sx={{ p: 2 }}>
-                  <Grid container alignItems="center" spacing={2}>
-                    <Grid item>
-                      <Grid sx={{ p: 1.5, bgcolor: 'grey.100', borderRadius: 2 }}>
-                        <i className='tabler-building' />
-                      </Grid>
-                    </Grid>
-                    <Grid item>
-                      <Typography variant="subtitle1">PT Teknologi {i}</Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Jakarta Selatan
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
+          <AjukanInstansi
+            newInstansi={newInstansi}
+            handleInputChange={handleInputChange}
+            handleLogoUpload={handleLogoUpload}
+            handleSubmit={handleSubmit}
+          />
         </TabPanel>
       </TabContext>
 

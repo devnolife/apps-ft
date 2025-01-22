@@ -14,8 +14,7 @@ import styles from '@core/styles/table.module.css';
 import CustomTextField from '@core/components/mui/TextField';
 import TablePaginationComponent from '@components/TablePaginationComponent';
 import AddPersyaratan from "./add";
-import useApiGraphql from '@hooks/useApiGraphql';
-
+import useApiGraphql from "@/hooks/useApiGraphql";
 import CustomAvatar from '@core/components/mui/Avatar'
 
 const role = 'admin'; // Ubah sesuai kebutuhan
@@ -49,9 +48,7 @@ const Page = () => {
     `;
 
     try {
-      const response = query(queryStr);
-
-      console.log("🚀 ~ fetchRequirements ~ response:", response)
+      const response = await query(queryStr);
 
       setData(response.data.getAllKkpSyarat);
     } catch (error) {
