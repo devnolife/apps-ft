@@ -22,8 +22,11 @@ import {
   Chip,
   TextField,
   Box,
-  CardMedia
+  CardMedia,
+  CircularProgress
 } from '@mui/material'
+
+import { toast } from 'react-toastify'
 
 import { motion } from 'framer-motion'
 
@@ -54,6 +57,7 @@ export default function DashboardPage() {
   const [instansi, setInstansi] = useState([])
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
+  const [loading, setLoading] = useState(false)
 
   const [newInstansi, setNewInstansi] = useState({
     nama: '',
@@ -99,6 +103,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true)
       try {
         const query = `
           query GetKkpSyaratByKodeProdi {
@@ -122,7 +127,10 @@ export default function DashboardPage() {
           }))
         )
       } catch (error) {
+        toast.error('Failed to fetch data')
         console.error(error)
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -131,24 +139,32 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchInstansiApprovals = async () => {
-      const queryInstansi = `
-        query GetAllKkpInstansiApprovals {
-          getAllKkpInstansiApprovals {
-            kkpInstansi {
-              id
-              nama
-              alamat
-              keterangan
-              logo
-              is_activated
+      setLoading(true)
+      try {
+        const queryInstansi = `
+          query GetAllKkpInstansiApprovals {
+            getAllKkpInstansiApprovals {
+              kkpInstansi {
+                id
+                nama
+                alamat
+                keterangan
+                logo
+                is_activated
+              }
             }
           }
-        }
-      `
+        `
 
-      const response = await axios.post('https://superapps.if.unismuh.ac.id/graphql', { query: queryInstansi })
+        const response = await axios.post('https://superapps.if.unismuh.ac.id/graphql', { query: queryInstansi })
 
-      setInstansiApprovals(response.data?.data?.getAllKkpInstansiApprovals || [])
+        setInstansiApprovals(response.data?.data?.getAllKkpInstansiApprovals || [])
+      } catch (error) {
+        toast.error('Failed to fetch data')
+        console.error(error)
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchInstansiApprovals()
@@ -225,77 +241,36 @@ export default function DashboardPage() {
           <Tab icon={<i className='tabler-plus' />} label='Ajukan Instansi Baru' value='ajukan-instansi' />
         </TabList>
         <TabPanel value='persyaratan'>
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <Card>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    Persyaratan Kuliah Kerja Profesi
-                  </Typography>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell sx={{ fontSize: '1rem' }}>No</TableCell>
-                          <TableCell sx={{ fontSize: '1rem' }}>Persyaratan</TableCell>
-                          <TableCell sx={{ fontSize: '1rem' }}>Upload File</TableCell>
-                          <TableCell sx={{ fontSize: '1rem' }}>Aktif</TableCell>
-                          <TableCell sx={{ fontSize: '1rem' }}>Detail</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {persyaratan.map((item, index) => (
-                          <TableRow key={item.id}>
-                            <TableCell sx={{ fontSize: '1rem' }}>{index + 1}</TableCell>
-                            <TableCell sx={{ fontSize: '1rem' }}>
-                              <Grid container alignItems="center" spacing={1}>
-                                <Grid item>
-                                  <CustomAvatar color={getRandomColor()} variant="rounded" size={24} skin="light">
-                                    <i className={item.logo} />
-                                  </CustomAvatar>
-                                </Grid>
-                                <Grid item color={getRandomColor()}>
-                                  <Typography variant="body1">{item.nama}</Typography>
-                                </Grid>
-                              </Grid>
-                            </TableCell>
-                            <TableCell sx={{ fontSize: '1rem' }}>
-                              <Chip
-                                icon={<CustomAvatar color={item.file === 'Iya' ? 'success' : 'error'} variant="rounded" size={24} skin="light">
-                                  <i className={item.file === 'Iya' ? 'tabler-file-check' : 'tabler-file-x'} />
-                                </CustomAvatar>}
-                                variant="tonal"
-                                label={item.file}
-                                color={item.file === 'Iya' ? 'success' : 'error'}
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell sx={{ fontSize: '1rem' }}>
-                              <Chip
-                                icon={<CustomAvatar color={item.aktif === 'Aktif' ? 'success' : 'error'} variant="rounded" size={24} skin="light">
-                                  <i className={item.aktif === 'Aktif' ? 'tabler-check' : 'tabler-x'} />
-                                </CustomAvatar>}
-                                variant="tonal"
-                                label={item.aktif}
-                                color={item.aktif === 'Aktif' ? 'success' : 'error'}
-                                size="small"
-                              />
-                            </TableCell>
-                            <TableCell sx={{ fontSize: '1rem' }}>
-                              <Button size='small'
-                                variant="contained" startIcon={<i className="tabler-info-circle" />} onClick={() => handleClickOpen(item)}>
-                                Detail
-                              </Button>
-                            </TableCell>
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      Persyaratan Kuliah Kerja Profesi
+                    </Typography>
+                    <TableContainer>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell sx={{ fontSize: '1rem' }}>No</TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>Persyaratan</TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>Upload File</TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>Aktif</TableCell>
+                            <TableCell sx={{ fontSize: '1rem' }}>Detail</TableCell>
                           </TableRow>
                         ))}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </CardContent>
-              </Card>
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </CardContent>
+                </Card>
+              </Grid>
             </Grid>
-          </Grid>
         </TabPanel>
         <TabPanel value='timeline'>
           <Grid container spacing={4}>
@@ -368,8 +343,94 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               </Grid>
-            ))}
-          </Grid>
+            </Grid>
+          )}
+        </TabPanel>
+        <TabPanel value='timeline'>
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Grid container spacing={4}>
+              <Grid item xs={12}>
+                <Card>
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>Timeline KKP</Typography>
+                    <TimelineCenter />
+                  </CardContent>
+                </Card>
+              </Grid>
+            </Grid>
+          )}
+        </TabPanel>
+        <TabPanel value='list-instansi'>
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Grid container spacing={4}>
+              {instansiApprovals.map((item, idx) => (
+                <Grid item xs={12} sm={6} md={4} key={idx}>
+                  <Card
+                    sx={{
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      boxShadow: 3,
+                      borderRadius: 2,
+                      overflow: 'hidden',
+                      transition: 'transform 0.2s',
+                      '&:hover': { transform: 'scale(1.02)' },
+                    }}
+                  >
+                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
+                      <Grid
+                        container
+                        spacing={2}
+                        direction="column"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Grid item>
+                          <CustomAvatar
+                            color={getRandomColor()}
+                            variant="rounded"
+                            size={90}
+                            skin="light"
+                            sx={{ mb: 2 }}
+                          >
+                            <i className={item.kkpInstansi.logo} />
+                          </CustomAvatar>
+                        </Grid>
+                        <Grid item>
+                          <Chip
+                            variant="outlined"
+                            label={item.kkpInstansi.is_activated ? 'Terdaftar' : 'Tidak Aktif'}
+                            color={item.kkpInstansi.is_activated ? 'success' : 'error'}
+                            size="small"
+                            sx={{ mb: 1 }}
+                          />
+                        </Grid>
+                        <Grid item textAlign="center">
+                          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
+                            {item.kkpInstansi.nama}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                            {item.kkpInstansi.alamat}
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {item.kkpInstansi.keterangan}
+                          </Typography>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
           <AjukanInstansi
@@ -390,4 +451,3 @@ export default function DashboardPage() {
     </Container>
   )
 }
-
