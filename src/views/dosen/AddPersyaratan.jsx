@@ -2,74 +2,59 @@ import Grid from "@mui/material/Grid"
 import axios from "axios"
 import { useState } from "react"
 import { TextField, Button, RadioGroup, FormControlLabel, Radio, Select, MenuItem } from "@mui/material"
+import { CREATE_KKP_SYARAT, UPDATE_KKP_SYARAT } from 'src/graphql/mutations';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFormData, resetFormData } from 'src/store/slices/formSlice';
 
 const AddPersyaratan = ({ user }) => {
-  const [formData, setFormData] = useState({
-    prodi_kode_prodi: "",
-    nama: "",
-    logo: "",
-    url_check: "",
-    response_should_be: "",
-    is_upload_file: true,
-
-    is_activated: true,
-    created_by: user
-  });
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.form);
   const [userType, setUserType] = useState(user);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+    dispatch(setFormData({ [name]: value }));
   };
 
   const handleRadioChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value === "true"
-    });
+    dispatch(setFormData({ [name]: value === "true" }));
   };
 
   const handleUserTypeChange = (e) => {
     const { value } = e.target;
     setUserType(value);
     if (value === 'prodi') {
-      setFormData({
-        ...formData,
+      dispatch(setFormData({
         url_check: "",
         response_should_be: "",
         created_by: user
-      });
+      }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const mutation = `
-      mutation CreateKkpSyarat {
-        createKkpSyarat(
-          input: {
-            prodi_kode_prodi: "${formData.prodi_kode_prodi}"
-            nama: "${formData.nama}"
-            logo: "${formData.logo}"
-            url_check: "${formData.url_check}"
-            response_should_be: "${formData.response_should_be}"
-            is_upload_file: ${formData.is_upload_file}
-            is_activated: ${formData.is_activated}
-            created_by: "${formData.created_by}"
-          }
-        ) {
-          id
-          nama
-        }
+    const mutation = formData.id ? UPDATE_KKP_SYARAT : CREATE_KKP_SYARAT;
+    const variables = {
+      input: {
+        prodi_kode_prodi: formData.prodi_kode_prodi,
+        nama: formData.nama,
+        logo: formData.logo,
+        url_check: formData.url_check,
+        response_should_be: formData.response_should_be,
+        is_upload_file: formData.is_upload_file,
+        is_activated: formData.is_activated,
+        created_by: formData.created_by
       }
-    `;
+    };
+    if (formData.id) {
+      variables.id = formData.id;
+    }
     try {
-      const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query: mutation });
+      const response = await axios.post("https://superapps.if.unismuh.ac.id/graphql", { query: mutation, variables });
       console.log(response.data);
+      dispatch(resetFormData());
     } catch (error) {
       console.error(error);
     }
@@ -109,4 +94,3 @@ const AddPersyaratan = ({ user }) => {
 }
 
 export default AddPersyaratan
-
