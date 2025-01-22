@@ -49,8 +49,6 @@ const Page = () => {
     try {
       const response = await query(queryStr);
 
-      console.log("🚀 ~ fetchRequirements ~ response:", response)
-
       setData(response.data.getAllKkpSyarat);
     } catch (error) {
       toast.error(process.env.NODE_ENV === 'production' ? 'Ada Kesalahan ..' : error.message);
