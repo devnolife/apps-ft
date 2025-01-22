@@ -25,13 +25,13 @@ import {
   CardMedia
 } from '@mui/material'
 
+import { motion } from 'framer-motion'
 
 import Tab from '@mui/material/Tab'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 
-import TimelineCenter from './TimeLine'
 import DetailPersyaratan from './DetailPersyaratan'
 import CustomAvatar from '@core/components/mui/Avatar'
 
@@ -55,13 +55,6 @@ export default function DashboardPage() {
   const [instansiApprovals, setInstansiApprovals] = useState([])
   const [activeTab, setActiveTab] = useState('persyaratan')
 
-  const [newInstansi, setNewInstansi] = useState({
-    nama: '',
-    lokasi: '',
-    keterangan: '',
-    logo: null
-  })
-
   const handleClickOpen = (detail) => {
     setSelectedDetail(detail)
     setOpen(true)
@@ -81,23 +74,6 @@ export default function DashboardPage() {
 
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue)
-  }
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-
-    setNewInstansi({ ...newInstansi, [name]: value })
-  }
-
-  const handleLogoUpload = (e) => {
-    setNewInstansi({ ...newInstansi, logo: e.target.files[0] })
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    // Handle form submission logic here
-    console.log('New Instansi:', newInstansi)
   }
 
   useEffect(() => {
@@ -158,7 +134,14 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container
+      maxWidth="lg"
+      sx={{ py: 4 }}
+      component={motion.div}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <Grid container spacing={4} alignItems="center">
         <Grid item xs={12} md={6}>
           <Typography variant="h4" component="h1" gutterBottom>
@@ -171,6 +154,10 @@ export default function DashboardPage() {
 
         <Grid item xs={12} md={6}>
           <Card
+            component={motion.div}
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
             sx={{
               maxWidth: "100%",
               boxShadow: 3,
@@ -182,7 +169,13 @@ export default function DashboardPage() {
       </Grid>
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Card sx={{ maxWidth: '100%', p: 2 }}>
+          <Card
+            component={motion.div}
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            sx={{ maxWidth: '100%', p: 2 }}
+          >
             <CardContent sx={{ padding: 4 }} className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <CustomAvatar color="success" variant="rounded" size={40} skin="light">
@@ -238,12 +231,7 @@ export default function DashboardPage() {
           />
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
-          <AjukanInstansi
-            newInstansi={newInstansi}
-            handleInputChange={handleInputChange}
-            handleLogoUpload={handleLogoUpload}
-            handleSubmit={handleSubmit}
-          />
+          <AjukanInstansi />
         </TabPanel>
       </TabContext>
 

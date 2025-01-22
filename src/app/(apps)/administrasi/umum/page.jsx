@@ -133,7 +133,7 @@ const DashboardUmum = () => {
   return (
     <Grid container spacing={4}>
       <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} md={4}>
+        <Grid item xs={12} md={1}>
           <CardWelcome jumlahSurat={jumlahSurat} />
         </Grid>
         <Grid item xs={12} md={8}>
