@@ -104,6 +104,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
+
       try {
         const query = `
           query GetKkpSyaratByKodeProdi {
@@ -140,6 +141,7 @@ export default function DashboardPage() {
   useEffect(() => {
     const fetchInstansiApprovals = async () => {
       setLoading(true)
+
       try {
         const queryInstansi = `
           query GetAllKkpInstansiApprovals {
@@ -263,7 +265,9 @@ export default function DashboardPage() {
                             <TableCell sx={{ fontSize: '1rem' }}>Aktif</TableCell>
                             <TableCell sx={{ fontSize: '1rem' }}>Detail</TableCell>
                           </TableRow>
-                        ))}
+                        </TableHead>
+                        <TableBody>
+                          {/* ...map over persyaratan here... */}
                         </TableBody>
                       </Table>
                     </TableContainer>
@@ -271,6 +275,7 @@ export default function DashboardPage() {
                 </Card>
               </Grid>
             </Grid>
+          )}
         </TabPanel>
         <TabPanel value='timeline'>
           <Grid container spacing={4}>
@@ -343,94 +348,8 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
               </Grid>
-            </Grid>
-          )}
-        </TabPanel>
-        <TabPanel value='timeline'>
-          {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Card>
-                  <CardContent>
-                    <Typography variant="h5" gutterBottom>Timeline KKP</Typography>
-                    <TimelineCenter />
-                  </CardContent>
-                </Card>
-              </Grid>
-            </Grid>
-          )}
-        </TabPanel>
-        <TabPanel value='list-instansi'>
-          {loading ? (
-            <Box display="flex" justifyContent="center" alignItems="center" height="100%">
-              <CircularProgress />
-            </Box>
-          ) : (
-            <Grid container spacing={4}>
-              {instansiApprovals.map((item, idx) => (
-                <Grid item xs={12} sm={6} md={4} key={idx}>
-                  <Card
-                    sx={{
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      boxShadow: 3,
-                      borderRadius: 2,
-                      overflow: 'hidden',
-                      transition: 'transform 0.2s',
-                      '&:hover': { transform: 'scale(1.02)' },
-                    }}
-                  >
-                    <CardContent sx={{ flexGrow: 1, p: 3 }}>
-                      <Grid
-                        container
-                        spacing={2}
-                        direction="column"
-                        alignItems="center"
-                        justifyContent="center"
-                      >
-                        <Grid item>
-                          <CustomAvatar
-                            color={getRandomColor()}
-                            variant="rounded"
-                            size={90}
-                            skin="light"
-                            sx={{ mb: 2 }}
-                          >
-                            <i className={item.kkpInstansi.logo} />
-                          </CustomAvatar>
-                        </Grid>
-                        <Grid item>
-                          <Chip
-                            variant="outlined"
-                            label={item.kkpInstansi.is_activated ? 'Terdaftar' : 'Tidak Aktif'}
-                            color={item.kkpInstansi.is_activated ? 'success' : 'error'}
-                            size="small"
-                            sx={{ mb: 1 }}
-                          />
-                        </Grid>
-                        <Grid item textAlign="center">
-                          <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                            {item.kkpInstansi.nama}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                            {item.kkpInstansi.alamat}
-                          </Typography>
-                          <Typography variant="body2" color="text.secondary">
-                            {item.kkpInstansi.keterangan}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+            ))}
+          </Grid>
         </TabPanel>
         <TabPanel value='ajukan-instansi'>
           <AjukanInstansi
