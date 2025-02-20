@@ -1,8 +1,7 @@
 const Page = () => {
   return (
     <div>
-      <h1>Prodi</h1>
+      <h1>Kuliah Kerja Profesi</h1>
     </div>
   );
 }
-

@@ -102,7 +102,7 @@ const DataTable = ({ data, columns, title, globalFilterPlaceholder, addButtonLab
 
   return (
     <Card>
-      <CardHeader title='Tabel Persuratan' className='pbe-4' />
+      <CardHeader title='Tabel Persuratan a' className='pbe-4' />
       {/* <TableFilters setData={setFilteredData} tableData={data} /> */}
       <div className='flex flex-col items-start justify-between gap-4 p-6 md:flex-row md:items-center border-bs'>
         <div className='flex flex-col items-start gap-4 sm:flex-row max-sm:is-full sm:items-center'>
