@@ -1,34 +1,71 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Apps-FT
+
+A Next.js application with Material UI and Tailwind CSS.
+
+## Project Structure
+
+The project follows a modular architecture with clear separation of concerns:
+
+```
+src/
+├── app/                      # Next.js App Router pages
+│   ├── (auth)/               # Authentication-related pages
+│   ├── (dashboard)/          # Dashboard and authenticated pages
+│   ├── api/                  # API routes
+│   └── layout.jsx            # Root layout
+├── components/               # Reusable UI components
+│   ├── common/               # Common components used across the app
+│   ├── forms/                # Form-related components
+│   ├── layout/               # Layout components
+│   │   ├── dashboard/        # Dashboard layout components
+│   │   └── navigation/       # Navigation components
+│   └── ui/                   # Basic UI components
+├── hooks/                    # Custom React hooks
+├── lib/                      # Library code and third-party integrations
+│   ├── apollo/               # Apollo client setup
+│   ├── auth/                 # Authentication utilities
+│   └── redux/                # Redux store and slices
+├── styles/                   # Global styles and theme configuration
+├── types/                    # TypeScript type definitions
+└── utils/                    # Utility functions
+```
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or pnpm
+
+### Installation
 
 ```bash
-npm run dev
+# Install dependencies
+npm install
 # or
-yarn dev
+pnpm install
+
+# Run the development server
+npm run dev
 # or
 pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Development Guidelines
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Component Structure**: Components should be organized by their purpose and reusability
+2. **State Management**: Use Redux for global state and React hooks for local state
+3. **Styling**: Use a combination of Material UI components and Tailwind CSS for styling
+4. **Routing**: Use Next.js App Router for page routing
+5. **API Integration**: Use Apollo Client for GraphQL API integration
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev`: Run the development server
+- `npm run build`: Build the application for production
+- `npm run start`: Start the production server
+- `npm run lint`: Run ESLint to check for code quality issues
+- `npm run format`: Format code using Prettier
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
