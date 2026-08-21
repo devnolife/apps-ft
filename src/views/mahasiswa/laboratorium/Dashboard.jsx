@@ -89,7 +89,7 @@ const DashboardLab = ({ courseData, searchValue }) => {
             </FormControl>
             <FormControlLabel
               control={<Switch onChange={handleChange} checked={hideCompleted} />}
-              label='Praktikum Yang Belum Selesai'
+              label='Praktikum Yanjg Belum Selesai'
             />
           </div>
         </div>
